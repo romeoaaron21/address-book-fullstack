@@ -9,7 +9,7 @@ import Container from '@material-ui/core/Container';
 
 
 import {Link} from 'react-router-dom';
-
+import axios from 'axios';
 
 
 
@@ -38,8 +38,8 @@ export default function SignUp() {
   const classes = useStyles();
 
   const [state, setState] = useState({
-      firstName : '',
-      lastName : '',
+      first_name : '',
+      last_name : '',
       username : '',
       password : ''
   })
@@ -66,7 +66,7 @@ export default function SignUp() {
               <TextField
                 onChange={updateState}
                 autoComplete="fname"
-                name="firstName"
+                name="first_name"
                 variant="outlined"
                 required
                 fullWidth
@@ -81,7 +81,7 @@ export default function SignUp() {
                 required
                 fullWidth
                 label="Last Name"
-                name="lastName"
+                name="last_name"
                 autoComplete="lname"
               />
             </Grid>
@@ -110,7 +110,19 @@ export default function SignUp() {
             </Grid>
           </Grid>
           <Button
-            onClick = {()=>console.log(state)}
+            onClick = {()=> {
+              const token="5up324pp11c4710n53c237"
+              axios('http://localhost:3001/api/register', {
+                method: 'POST',
+                body: JSON.stringify(state),
+                headers: {
+                  Authorization: `token ${token}`
+                }
+              }).then(res => console.log(res))
+              }
+            }
+              
+
             fullWidth
             variant="contained"
             color="primary"
