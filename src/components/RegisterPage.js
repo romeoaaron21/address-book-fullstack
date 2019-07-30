@@ -111,13 +111,8 @@ export default function SignUp() {
           </Grid>
           <Button
             onClick = {()=> {
-              const token="5up324pp11c4710n53c237"
-              axios('http://localhost:3001/api/register', {
-                method: 'POST',
-                body: JSON.stringify(state),
-                headers: {
-                  Authorization: `token ${token}`
-                }
+              axios.post('http://localhost:3001/api/register', {
+                body: state,
               }).then(res => console.log(res))
               }
             }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -8,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -33,9 +34,19 @@ const useStyles = makeStyles(theme => ({
 export default function SignIn() {
   const classes = useStyles();
 
-  return (
+  const [state, setState] = useState({
+    username : '',
+    password : ''
+  })
 
-    
+  const updateState = e => {
+    setState({
+      ...state,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -44,6 +55,7 @@ export default function SignIn() {
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
+            onChange={updateState}
             variant="outlined"
             margin="normal"
             required
@@ -54,6 +66,7 @@ export default function SignIn() {
             autoFocus
           />
           <TextField
+            onChange={updateState}
             variant="outlined"
             margin="normal"
             required
@@ -64,6 +77,12 @@ export default function SignIn() {
             autoComplete="current-password"
           />
           <Button
+            onClick = {()=> {
+              axios.post('http://localhost:3001/api/login', {
+                body: state,
+              }).then(res => console.log(res))
+              }
+            }
             fullWidth
             variant="contained"
             color="primary"

@@ -25,5 +25,6 @@ massive({
     })
 
     app.post('/api/register', users.register)
+    app.post('/api/login', users.login)
 })
 
