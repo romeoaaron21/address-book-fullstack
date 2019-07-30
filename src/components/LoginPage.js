@@ -46,6 +46,7 @@ export default function SignIn() {
     username : '',
     password : ''
   })
+  let token = localStorage.getItem('token');
 
   const updateWarning = e => {
     if(e.target.value.length === 0) {
@@ -132,9 +133,15 @@ export default function SignIn() {
           />
           <Button
             onClick = {()=> {
-              axios.post('http://localhost:3001/api/login', {
-                body: state,
-              }).then(res => console.log(res))
+              axios('http://localhost:3001/api/login', {
+                method: 'post',
+                data: state,
+                headers: {
+                  'Authorization': `Bearer ${token}`
+                }
+              }).then(res => {
+                console.log(res)
+              })
               }
             }
             fullWidth

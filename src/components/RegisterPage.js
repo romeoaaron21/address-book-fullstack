@@ -55,6 +55,9 @@ export default function SignUp() {
       password : ''
   })
 
+  const [ token, setToken ] = useState('');
+  localStorage.setItem('token', token);
+
   const updateWarning = e => {
     if(e.target.value.length === 0) {
       setWarning({
@@ -173,9 +176,10 @@ export default function SignUp() {
           </Grid>
           <Button
             onClick = {()=> {
-              axios.post('http://localhost:3001/api/register', {
-                body: state,
-              }).then(res => console.log(res))
+              axios('http://localhost:3001/api/register', {
+                method: 'post',
+                data: state,
+              }).then(res => setToken(res.data.token))
               }
             }
     

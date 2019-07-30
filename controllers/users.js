@@ -4,7 +4,7 @@ const secret = require('../secret');
 
 function register(req, res) {
   const db = req.app.get('db');
-  const { first_name, last_name, username, password } = req.body.body;
+  const { first_name, last_name, username, password } = req.body;
 
   argon2
     .hash(password)
@@ -29,7 +29,7 @@ function register(req, res) {
 
 function login(req, res) {
     const db = req.app.get('db');
-    const { username, password } = req.body.body;
+    const { username, password } = req.body;
   
     db.users
       .findOne({username},
@@ -37,6 +37,8 @@ function login(req, res) {
           fields: ['id', 'first_name', 'last_name', 'username', 'password'],
         })
       .then(user => {
+
+
         if (!user) {
           throw new Error('Invalid username');
         }
@@ -44,6 +46,16 @@ function login(req, res) {
           if (!valid) {
             throw new Error('Incorrect password');
           }
+
+        try{
+            const tokens = req.headers.authorization.split(" ")[1];
+            jwt.verify(tokens, secret);
+            res.status(200).json({ data: 'here is the protexted data' });
+        } catch(err) {
+            console.error(err);
+            res.status(401).end();
+        }
+        
           const token = jwt.sign({ userId: user.id }, secret);
           delete user.password; 
           res.status(200).json({ ...user, token });
