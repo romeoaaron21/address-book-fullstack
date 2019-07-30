@@ -33,17 +33,65 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignIn() {
   const classes = useStyles();
-
   const [state, setState] = useState({
     username : '',
     password : ''
   })
+  const [warning, setWarning] = useState({
+    username : false,
+    password : false
+
+  })
+  const [helper, setHelper] = useState({
+    username : '',
+    password : ''
+  })
+
+  const updateWarning = e => {
+    if(e.target.value.length === 0) {
+      setWarning({
+        ...warning,
+        [e.target.name]: true
+      })
+
+      setHelper({
+        ...helper,
+        [e.target.name]: `${e.target.name.charAt(0).toUpperCase() + e.target.name.slice(1)} field is required`
+      })
+    }
+    else{
+      setHelper({
+        ...helper,
+        [e.target.name]: ''
+      })
+    }
+  }
 
   const updateState = e => {
     setState({
       ...state,
       [e.target.name]: e.target.value
     });
+    if(e.target.value.length > 0) {
+      setWarning({
+        ...warning,
+        [e.target.name]: false
+      })
+      setHelper({
+        ...helper,
+        [e.target.name]: ''
+      })
+    }
+    else{
+      setWarning({
+        ...warning,
+        [e.target.name]: true
+      })
+      setHelper({
+        ...helper,
+        [e.target.name]: `${e.target.name.charAt(0).toUpperCase() + e.target.name.slice(1)} field is required`
+      })
+    }
   };
 
   return (
@@ -55,7 +103,10 @@ export default function SignIn() {
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
+            error = {warning.username}
+            onBlur={updateWarning}
             onChange={updateState}
+            helperText = {helper.username}
             variant="outlined"
             margin="normal"
             required
@@ -66,7 +117,10 @@ export default function SignIn() {
             autoFocus
           />
           <TextField
+            error = {warning.password}
+            onBlur={updateWarning}
             onChange={updateState}
+            helperText = {helper.password}
             variant="outlined"
             margin="normal"
             required

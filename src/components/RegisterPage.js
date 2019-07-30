@@ -36,20 +36,70 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp() {
   const classes = useStyles();
-
+  const [warning, setWarning] = useState({
+    first_name : false,
+    last_name : false,
+    username : false,
+    password : false
+  })
   const [state, setState] = useState({
       first_name : '',
       last_name : '',
       username : '',
       password : ''
   })
+  const [helper, setHelper] = useState({
+      first_name : '',
+      last_name : '',
+      username : '',
+      password : ''
+  })
 
+  const updateWarning = e => {
+    if(e.target.value.length === 0) {
+      setWarning({
+        ...warning,
+        [e.target.name]: true
+      })
+      setHelper({
+        ...helper,
+        [e.target.name]: `${e.target.name.charAt(0).toUpperCase() + e.target.name.slice(1)} field is required`
+      })
+    }
+    else{
+      setHelper({
+        ...helper,
+        [e.target.name]: ''
+      })
+    }
+  }
 
   const updateState = e => {
     setState({
       ...state,
       [e.target.name]: e.target.value
     });
+
+    if(e.target.value.length > 0) {
+      setWarning({
+        ...warning,
+        [e.target.name]: false
+      })
+      setHelper({
+        ...helper,
+        [e.target.name]: ''
+      })
+    }
+    else{
+      setWarning({
+        ...warning,
+        [e.target.name]: true
+      })
+      setHelper({
+        ...helper,
+        [e.target.name]: `${e.target.name.charAt(0).toUpperCase() + e.target.name.slice(1)} field is required`
+      })
+    }
   };
 
 
@@ -62,9 +112,12 @@ export default function SignUp() {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} required>
               <TextField
+                error = {warning.first_name}
+                onBlur={updateWarning}
                 onChange={updateState}
+                helperText = {helper.first_name}
                 autoComplete="fname"
                 name="first_name"
                 variant="outlined"
@@ -76,7 +129,10 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
+                error = {warning.last_name}
+                onBlur={updateWarning}
                 onChange={updateState}
+                helperText = {helper.last_name}
                 variant="outlined"
                 required
                 fullWidth
@@ -87,7 +143,10 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error = {warning.username}
+                onBlur={updateWarning}
                 onChange={updateState}
+                helperText = {helper.username}
                 variant="outlined"
                 required
                 fullWidth
@@ -98,7 +157,10 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error = {warning.password}
+                onBlur={updateWarning}
                 onChange={updateState}
+                helperText = {helper.password}
                 variant="outlined"
                 required
                 fullWidth
@@ -116,8 +178,7 @@ export default function SignUp() {
               }).then(res => console.log(res))
               }
             }
-              
-
+    
             fullWidth
             variant="contained"
             color="primary"
