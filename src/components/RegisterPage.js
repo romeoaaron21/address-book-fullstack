@@ -16,21 +16,27 @@ import axios from 'axios';
 const useStyles = makeStyles(theme => ({
   '@global': {
     body: {
-      backgroundColor: theme.palette.common.white,
+      backgroundImage: 'url(http://sartorialgeek.com/wp-content/uploads/2019/03/tumblr-static-tumblr-static-4s7ywtc5xqioccocksokosgc0-focused-v3-booknerd-40616612-2048-1152.jpg)',
+      backgroundSize: 'cover',
+      
     },
   },
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: '15vh',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    border: '1px solid #757575', 
+    boxShadow: '5px 7px #b5b5b582', 
+    backgroundColor:'#dedbdb', 
+    padding:'40px 20px'
   },
   form: {
     width: '100%',
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(2),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(4, 0, 2),
   },
 }));
 
@@ -55,8 +61,8 @@ export default function SignUp() {
       password : ''
   })
 
-  const [ token, setToken ] = useState('');
-  localStorage.setItem('token', token);
+  // const [ token, setToken ] = useState('');
+  // localStorage.setItem('token', token);
 
   const updateWarning = e => {
     if(e.target.value.length === 0) {
@@ -107,7 +113,7 @@ export default function SignUp() {
 
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" style={{maxWidth:'500px'}}>
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
@@ -179,7 +185,10 @@ export default function SignUp() {
               axios('http://localhost:3001/api/register', {
                 method: 'post',
                 data: state,
-              }).then(res => setToken(res.data.token))
+              }).then(function(res){
+                // setToken(res.data.token)
+                window.location.href = '#/'
+              })
               }
             }
     

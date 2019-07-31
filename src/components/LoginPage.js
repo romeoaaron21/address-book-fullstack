@@ -7,27 +7,36 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const useStyles = makeStyles(theme => ({
   '@global': {
     body: {
-      backgroundColor: theme.palette.common.white,
+      backgroundImage: 'url(http://sartorialgeek.com/wp-content/uploads/2019/03/tumblr-static-tumblr-static-4s7ywtc5xqioccocksokosgc0-focused-v3-booknerd-40616612-2048-1152.jpg)',
+      backgroundSize: 'cover',
+      
     },
   },
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: '15vh',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    border: '1px solid #757575', 
+    boxShadow: '5px 7px #b5b5b582', 
+    backgroundColor:'#dedbdb', 
+    padding:'40px 20px'
   },
   form: {
     width: '100%',
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(2),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(4, 0, 2),
   },
 }));
 
@@ -46,7 +55,12 @@ export default function SignIn() {
     username : '',
     password : ''
   })
-  let token = localStorage.getItem('token');
+  // let token = localStorage.getItem('token');
+
+  const [ token, setToken ] = useState('');
+  const [ id, setId ] = useState('');
+  localStorage.setItem('token', token);
+  localStorage.setItem('id', id);
 
   const updateWarning = e => {
     if(e.target.value.length === 0) {
@@ -95,12 +109,15 @@ export default function SignIn() {
     }
   };
 
+
+
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" style={{maxWidth:'500px'}}>
+      <ToastContainer enableMultiContainer/>
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          Sign in
+          Address Book Login
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
@@ -136,11 +153,17 @@ export default function SignIn() {
               axios('http://localhost:3001/api/login', {
                 method: 'post',
                 data: state,
-                headers: {
-                  'Authorization': `Bearer ${token}`
-                }
-              }).then(res => {
-                console.log(res)
+                // headers: {
+                //   'Authorization': `Bearer ${token}`
+                // }
+              }).then(function(res) {
+                setToken(res.data.token)
+                setId(res.data.id)
+                window.location.href = '#/addressBook'
+              }).catch(() => {
+                toast.error("Invalid User Account!", {
+                  position: toast.POSITION.TOP_RIGHT
+                });
               })
               }
             }
@@ -151,6 +174,7 @@ export default function SignIn() {
           >
             Sign In
           </Button>
+
           <Grid container>
             <Grid item>
               <Link to="/register">

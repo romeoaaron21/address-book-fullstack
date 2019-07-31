@@ -47,14 +47,14 @@ function login(req, res) {
             throw new Error('Incorrect password');
           }
 
-        try{
-            const tokens = req.headers.authorization.split(" ")[1];
-            jwt.verify(tokens, secret);
-            res.status(200).json({ data: 'here is the protexted data' });
-        } catch(err) {
-            console.error(err);
-            res.status(401).end();
-        }
+        // try{
+        //     const tokens = req.headers.authorization.split(" ")[1];
+        //     jwt.verify(tokens, secret);
+        //     res.status(200).json({ data: 'here is the protexted data' });
+        // } catch(err) {
+        //     console.error(err);
+        //     res.status(401).end();
+        // }
         
           const token = jwt.sign({ userId: user.id }, secret);
           delete user.password; 
