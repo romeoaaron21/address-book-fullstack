@@ -83,20 +83,24 @@ export default function AddressBook() {
   if (localStorage.getItem('token') === null || localStorage.getItem('token').length === 0) {
     window.location.href = '#/'
   }
-  const user = localStorage.getItem('id')
+  const user_id = localStorage.getItem('id');
+  const user = localStorage.getItem('user');
   const [ open, setOpen ] = React.useState(false);
+
   const [ component, setComponent ] = useState(true);
   const [ contacts, setContacts ] = useState([]);
-
-  // if(component === true){
-  //   axios('http://localhost:3001/api/addressBook', {
-  //     method: 'get',
-  //     data: user,
-  // }).then(function(res){
-  //     console.log(res);
-  //     setComponent(false);
-  // })
-  // }
+ 
+if(component === true){
+  axios(`http://localhost:3001/api/getContact/${user_id}`, {
+      method: 'get',
+  }).then(function(res) {
+    setComponent(false);
+    console.log(res.data)
+    setContacts(res.data)
+    
+  })
+}
+    
 
   function handleClickOpen() {
     setOpen(true);
@@ -193,13 +197,14 @@ export default function AddressBook() {
                 </TableRow>
               </TableHead>
               <TableBody style={{ overflow: 'auto', border: '3px solid', height: '20px' }}>
-                {rows.map(row => (
-                  <TableRow key={row.name}>
+                { 
+                  rows.map(row => (
+                  <TableRow key={row.id}>
                     <TableCell component="th" scope="row">
                       {row.first_name}
                     </TableCell>
                     <TableCell align="right">{row.last_name}</TableCell>
-                    <TableCell align="right">{row.phone}</TableCell>
+                    <TableCell align="right">{row.mobile_phone}</TableCell>
                     <TableCell align="right">
                       <Fab size="small" style={{ backgroundColor: '#874aff' }} className={classes.action}>
                         <EditIcon />
@@ -212,7 +217,8 @@ export default function AddressBook() {
                       </Fab>
                     </TableCell>
                   </TableRow>
-                ))}
+                ))
+              }
               </TableBody>
             </Table>
           </Paper>

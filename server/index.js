@@ -28,6 +28,5 @@ massive({
     app.post('/api/register', users.register);
     app.post('/api/login', users.login);
     app.post('/api/addContact', contacts.addContact);
-    // app.get('/api/addressBook', contacts.getContact);
+    app.get('/api/getContact/:user_id', contacts.getContact);
 })
-

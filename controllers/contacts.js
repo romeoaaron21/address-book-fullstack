@@ -1,3 +1,4 @@
+
 function addContact(req, res) {
   const db = req.app.get('db');
   const { first_name, last_name, city, country, email, home_phone, mobile_phone, work_phone, postal_code, state, user_id } = req.body;
@@ -20,41 +21,21 @@ function addContact(req, res) {
 }
 
 
-// function getContact(req, res){
-//   const db = req.app.get('db');
-//   const { user } = req.body;
-//   console.log(req.body)
+function getContact(req, res){
+  const db = req.app.get('db');
+  const { user_id } = req.params;
 
-//   db.query(`SELECT * FROM contacts, addressbook WHERE addressbook.contact_id = contacts.id AND addressbook.user_id = ${user}`)
-//   .then(contacts => {
-//       res.status(201).json({ ...contacts});
-//   })
-//   .catch(err => {
-//       console.error(err);
-//   });
+  db.query(`SELECT * FROM contacts, addressbook WHERE addressbook.contact_id = contacts.id AND addressbook.user_id = ${user_id}`)
+  .then(contacts => {
+      res.status(201).json({ ...contacts});
+  })
+  .catch(err => {
+      console.error(err);
+  });
 
-// }
+}
 
 module.exports = {
     addContact,
-    // getContact,
+    getContact,
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
