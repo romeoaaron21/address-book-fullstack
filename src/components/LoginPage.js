@@ -59,8 +59,10 @@ export default function SignIn() {
 
   const [ token, setToken ] = useState('');
   const [ id, setId ] = useState('');
+  const [ user, setUser ] = useState('');
   localStorage.setItem('token', token);
   localStorage.setItem('id', id);
+  localStorage.setItem('user', user);
 
   const updateWarning = e => {
     if(e.target.value.length === 0) {
@@ -159,6 +161,7 @@ export default function SignIn() {
               }).then(function(res) {
                 setToken(res.data.token)
                 setId(res.data.id)
+                setUser(res.data.username)
                 window.location.href = '#/addressBook'
               }).catch(() => {
                 toast.error("Invalid User Account!", {
