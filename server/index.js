@@ -1,6 +1,7 @@
 const express = require('express');
 const massive = require('massive');
 const users = require('../controllers/users')
+const contacts = require('../controllers/contacts')
 const cors = require("cors");
 
 
@@ -24,7 +25,9 @@ massive({
         console.log(`Running on port ${PORT}`)
     })
 
-    app.post('/api/register', users.register)
-    app.post('/api/login', users.login)
+    app.post('/api/register', users.register);
+    app.post('/api/login', users.login);
+    app.post('/api/addContact', contacts.addContact);
+    // app.get('/api/addressBook', contacts.getContact);
 })
 

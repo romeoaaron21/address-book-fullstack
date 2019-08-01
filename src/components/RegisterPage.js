@@ -11,6 +11,9 @@ import Container from '@material-ui/core/Container';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -114,6 +117,7 @@ export default function SignUp() {
 
   return (
     <Container component="main" style={{maxWidth:'500px'}}>
+      <ToastContainer enableMultiContainer/>
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
@@ -182,6 +186,12 @@ export default function SignUp() {
           </Grid>
           <Button
             onClick = {()=> {
+              if(state.firstname === '' || state.last_name === '' || state.username === '' || state.password === '' ){
+                toast.error("Please fill all fields!", {
+                  position: toast.POSITION.TOP_RIGHT
+                });
+              }
+              else{
               axios('http://localhost:3001/api/register', {
                 method: 'post',
                 data: state,
@@ -190,6 +200,7 @@ export default function SignUp() {
                 window.location.href = '#/'
               })
               }
+            }
             }
     
             fullWidth
