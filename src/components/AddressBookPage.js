@@ -82,7 +82,8 @@ export default function AddressBook() {
   const [ open, setOpen ] = useState(false);
   const [ openEdit, setOpenEdit ] = useState(false);
   const [ editId, setEditId ] = useState('');
-  const [ search, setSearch ] = useState('');
+  const [ searchVal, setSearchVal ] = useState('');
+
 
   const [ component, setComponent ] = useState(true);
   const [ contacts, setContacts ] = useState([]);
@@ -107,10 +108,19 @@ if(component){
     setComponent(true)
   }
 
+
+  let filteredSearch = Object.keys(contacts).filter(function(obj){
+      let fname = contacts[obj].first_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
+      let lname = contacts[obj].last_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
+      var names = (fname, lname);
+      return names
+  })
+
+   
+
+
+
   const classes = useStyles();
-
-
-
   return (
     
     <React.Fragment>
@@ -182,7 +192,7 @@ if(component){
                   id="standard-search"
                   label="Search field"
                   type="search"
-                  onChange={e => setSearch(e.target.value)}
+                  onChange={e => setSearchVal(e.target.value)}
                 />
               </span>
               <span style={{ float: 'left', marginRight: '25px', marginTop: '20px', marginBottom: '10px' }}>
@@ -201,12 +211,36 @@ if(component){
                 </TableRow>
               </TableHead>
               <TableBody>
-                {!component?
+                {!component && contacts[0]?
                 // console.log(contacts)
-                // Object.keys(contacts).map(i => console.log(contacts[i].last_name))
+                // Object.keys(contacts).map(i => console.log(contacts[i]))
                 
 
-                Object.keys(contacts).map(i => (
+
+                // var data = [
+                //   {email: "usera@gmail.com",nama:"User A", Level:"Super Admin"},
+                //   {email: "userb@gmail.com",nama:"User B", Level:"Super Admin"},
+                //   {email: "userc@gmail.com",nama:"User C", Level:"Standart"},
+                //   {email: "userd@gmail.com",nama:"User D", Level:"Standart"},
+                //   {email: "usere@gmail.com",nama:"User E", Level:"Admin"},
+                //   {email: "userf@gmail.com",nama:"User F", Level:"Standart"}
+                // ];
+                // var filter = "Level";
+                // var keyword = "Standart";
+                
+                // var filteredData = data.filter(function(obj) {
+                //   return obj[filter] === keyword;
+                // });
+
+                // Object.keys(contacts).map(i => {
+                //     contacts.filter(function(obj){
+                //     console.log(obj[i.first_name] === 'asd')
+                //   })
+                // })
+
+                  
+                
+                filteredSearch.map(i => (
                   <TableRow key={contacts[i].contact_id}>
                      <TableCell component="th" scope="row">
                        {contacts[i].first_name}
