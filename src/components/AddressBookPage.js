@@ -32,6 +32,7 @@ import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import LogoutIcon from '@material-ui/icons/ExitToApp';
 
 import AddContact from './dialog/AddContact';
+import EditContact from './dialog/EditContact';
 import axios from 'axios';
 
 
@@ -68,13 +69,6 @@ const rows = [
   createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
   createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
   createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
 ];
 
 
@@ -85,34 +79,43 @@ export default function AddressBook() {
   }
   const user_id = localStorage.getItem('id');
   const user = localStorage.getItem('user');
-  const [ open, setOpen ] = React.useState(false);
+  const [ open, setOpen ] = useState(false);
+  const [ openEdit, setOpenEdit ] = useState(false);
+  const [ editId, setEditId ] = useState('');
+  const [ search, setSearch ] = useState('');
 
   const [ component, setComponent ] = useState(true);
   const [ contacts, setContacts ] = useState([]);
  
-if(component === true){
+if(component){
   axios(`http://localhost:3001/api/getContact/${user_id}`, {
       method: 'get',
   }).then(function(res) {
-    setComponent(false);
-    console.log(res.data)
     setContacts(res.data)
-    
   })
+  setComponent(false);
 }
-    
 
-  function handleClickOpen() {
-    setOpen(true);
+  function handleCloseEdit() {
+    setOpenEdit(false);
   }
   function handleClose() {
     setOpen(false);
   }
 
+  function handleComponent(){
+    setComponent(true)
+  }
+
   const classes = useStyles();
 
+
+
   return (
+    
     <React.Fragment>
+      
+
       <AppBar position="static" style={{
         backgroundImage: 'linear-gradient(to right, #ff5cff, #f550f8, #ea44f1, #e037ea, #d527e3, #d423e1, #d41edf, #d319dd, #dc24df, #e52de1, #ed36e4, #f63ee6)'
       }}>
@@ -179,11 +182,12 @@ if(component === true){
                   id="standard-search"
                   label="Search field"
                   type="search"
+                  onChange={e => setSearch(e.target.value)}
                 />
               </span>
               <span style={{ float: 'left', marginRight: '25px', marginTop: '20px', marginBottom: '10px' }}>
                 <Fab size="medium" style={{ backgroundColor: '#833ab4' }} aria-label="add">
-                  <AddIcon style={{ float: 'right', color: 'white' }} onClick={handleClickOpen} />
+                  <AddIcon style={{ float: 'right', color: 'white' }} onClick={()=>setOpen(true)} />
                 </Fab>
               </span>
             </div>
@@ -196,28 +200,55 @@ if(component === true){
                   <TableCell align="right">ACTION </TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody style={{ overflow: 'auto', border: '3px solid', height: '20px' }}>
-                { 
-                  rows.map(row => (
-                  <TableRow key={row.id}>
-                    <TableCell component="th" scope="row">
-                      {row.first_name}
-                    </TableCell>
-                    <TableCell align="right">{row.last_name}</TableCell>
-                    <TableCell align="right">{row.mobile_phone}</TableCell>
-                    <TableCell align="right">
-                      <Fab size="small" style={{ backgroundColor: '#874aff' }} className={classes.action}>
-                        <EditIcon />
-                      </Fab>
-                      <Fab size="small" style={{ backgroundColor: '#f50057',  margin: '0 10px' }} className={classes.action}>
-                        <DeleteIcon />
-                      </Fab>
-                      <Fab size="small" style={{ backgroundColor: '#07bc0c' }} className={classes.action}>
-                        <GroupAddIcon />
-                      </Fab>
-                    </TableCell>
-                  </TableRow>
+              <TableBody>
+                {!component?
+                // console.log(contacts)
+                // Object.keys(contacts).map(i => console.log(contacts[i].last_name))
+                
+
+                Object.keys(contacts).map(i => (
+                  <TableRow key={contacts[i].contact_id}>
+                     <TableCell component="th" scope="row">
+                       {contacts[i].first_name}
+                     </TableCell>
+                     <TableCell align="right">{contacts[i].last_name}</TableCell>
+                     <TableCell align="right">{contacts[i].mobile_phone}</TableCell>
+                     <TableCell align="right">
+
+
+                       <Fab size="small" onClick={function() {
+                        setOpenEdit(true)
+                        setEditId(contacts[i].contact_id)
+                      }
+                      } 
+                        
+                       style={{ backgroundColor: '#874aff' }} className={classes.action}>
+                         <EditIcon />
+                       </Fab>
+
+
+                       <Fab size="small" onClick={()=>{
+                         axios(`http://localhost:3001/api/deleteContact/${contacts[i].contact_id}`, {
+                          method: 'delete',
+                          }).then(function(res){
+                            setComponent(true)
+                            // console.log(res)
+                          })
+                       }} style={{ backgroundColor: '#f50057',  margin: '0 10px' }} className={classes.action}>
+                         <DeleteIcon />
+                       </Fab>
+
+
+                       <Fab size="small" style={{ backgroundColor: '#07bc0c' }} className={classes.action}>
+                         <GroupAddIcon />
+                       </Fab>
+
+
+                     </TableCell>
+                   </TableRow>
                 ))
+                :
+                null
               }
               </TableBody>
             </Table>
@@ -226,7 +257,8 @@ if(component === true){
       </Grid>
 
 
-      {open ? <AddContact openDialog={open} handleClose={handleClose}/> : <React.Fragment></React.Fragment>}
+      {open ? <AddContact openDialog={open} handleClose={handleClose} handleComponent={handleComponent}/> : <React.Fragment></React.Fragment>}
+      {openEdit ? <EditContact openDialog={openEdit} editId={editId} handleClose={handleCloseEdit} handleComponent={handleComponent}/> : <React.Fragment></React.Fragment>}
 
       
     </React.Fragment>

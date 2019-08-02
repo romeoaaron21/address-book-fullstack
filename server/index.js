@@ -29,4 +29,7 @@ massive({
     app.post('/api/login', users.login);
     app.post('/api/addContact', contacts.addContact);
     app.get('/api/getContact/:user_id', contacts.getContact);
+    app.delete('/api/deleteContact/:contacts_id', contacts.deleteContact);
+    app.get('/api/getContactInfo/:contacts_id', contacts.getContactInfo)
+    app.patch('/api/editContact/:contacts_id', contacts.editContact)
 })
