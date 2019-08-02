@@ -35,7 +35,8 @@ import AddContact from './dialog/AddContact';
 import EditContact from './dialog/EditContact';
 import axios from 'axios';
 
-
+import ArrowDown from '@material-ui/icons/ArrowDownward';
+import ArrowUpward from '@material-ui/icons/ArrowUpward';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -79,23 +80,25 @@ export default function AddressBook() {
   }
   const user_id = localStorage.getItem('id');
   const user = localStorage.getItem('user');
-  const [ open, setOpen ] = useState(false);
-  const [ openEdit, setOpenEdit ] = useState(false);
-  const [ editId, setEditId ] = useState('');
-  const [ searchVal, setSearchVal ] = useState('');
+  const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editId, setEditId] = useState('');
+  const [searchVal, setSearchVal] = useState('');
 
 
-  const [ component, setComponent ] = useState(true);
-  const [ contacts, setContacts ] = useState([]);
- 
-if(component){
-  axios(`http://localhost:3001/api/getContact/${user_id}`, {
+  const [component, setComponent] = useState(true);
+  const [contacts, setContacts] = useState([]);
+  const [sortBut, setSortBut] = useState(false);
+  const [sortButF, setSortButF] = useState(false);
+
+  if (component) {
+    axios(`http://localhost:3001/api/getContact/${user_id}`, {
       method: 'get',
-  }).then(function(res) {
-    setContacts(res.data)
-  })
-  setComponent(false);
-}
+    }).then(function (res) {
+      setContacts(res.data)
+    })
+    setComponent(false);
+  }
 
   function handleCloseEdit() {
     setOpenEdit(false);
@@ -104,27 +107,24 @@ if(component){
     setOpen(false);
   }
 
-  function handleComponent(){
+  function handleComponent() {
     setComponent(true)
   }
 
 
-  let filteredSearch = Object.keys(contacts).filter(function(obj){
-      let fname = contacts[obj].first_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
-      let lname = contacts[obj].last_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
-      var names = (fname, lname);
-      return names
+  let filteredSearch = Object.keys(contacts).filter(function (obj) {
+    let fname = contacts[obj].first_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
+    let lname = contacts[obj].last_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
+    var names = (fname, lname);
+    return names
   })
-
-   
-
 
 
   const classes = useStyles();
   return (
-    
+
     <React.Fragment>
-      
+
 
       <AppBar position="static" style={{
         backgroundImage: 'linear-gradient(to right, #ff5cff, #f550f8, #ea44f1, #e037ea, #d527e3, #d423e1, #d41edf, #d319dd, #dc24df, #e52de1, #ed36e4, #f63ee6)'
@@ -195,95 +195,128 @@ if(component){
                   onChange={e => setSearchVal(e.target.value)}
                 />
               </span>
+
               <span style={{ float: 'left', marginRight: '25px', marginTop: '20px', marginBottom: '10px' }}>
                 <Fab size="medium" style={{ backgroundColor: '#833ab4' }} aria-label="add">
-                  <AddIcon style={{ float: 'right', color: 'white' }} onClick={()=>setOpen(true)} />
+                  <AddIcon style={{ float: 'right', color: 'white' }} onClick={() => setOpen(true)} />
                 </Fab>
               </span>
             </div>
             <Table className={classes.table}>
               <TableHead>
                 <TableRow>
-                  <TableCell>FIRST NAME</TableCell>
-                  <TableCell align="right">LAST NAME</TableCell>
+                  <TableCell>FIRST NAME {!sortButF ? <ArrowDown style={{ marginLeft: '5px' }} onClick={() => {
+                    axios(`http://localhost:3001/api/sortContactFname/${user_id}`, {
+                      method: 'get',
+                    }).then(function (res) {
+                      setContacts(res.data)
+                      setSortButF(true)
+                      console.log(res)
+                    })
+                  }} /> : <ArrowUpward style={{ marginLeft: '5px' }} onClick={() => {
+                    axios(`http://localhost:3001/api/sortContactFnameDesc/${user_id}`, {
+                      method: 'get',
+                    }).then(function (res) {
+                      setContacts(res.data)
+                      setSortButF(false)
+                      console.log(res)
+                    })
+                  }} />}</TableCell>
+                  <TableCell align="right">LAST NAME {!sortBut ? <ArrowDown style={{ marginLeft: '5px' }} onClick={() => {
+                    axios(`http://localhost:3001/api/sortContactLname/${user_id}`, {
+                      method: 'get',
+                    }).then(function (res) {
+                      setContacts(res.data)
+                      setSortBut(true)
+                      console.log(res)
+                    })
+                  }} /> : <ArrowUpward style={{ marginLeft: '5px' }} onClick={() => {
+                    axios(`http://localhost:3001/api/sortContactLnameDesc/${user_id}`, {
+                      method: 'get',
+                    }).then(function (res) {
+                      setContacts(res.data)
+                      setSortBut(false)
+                      console.log(res)
+                    })
+                  }} />}</TableCell>
                   <TableCell align="right">MOBILE NUMBER</TableCell>
                   <TableCell align="right">ACTION </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {!component && contacts[0]?
-                // console.log(contacts)
-                // Object.keys(contacts).map(i => console.log(contacts[i]))
-                
+                {!component && contacts[0] ?
+                  // console.log(contacts)
+                  // Object.keys(contacts).map(i => console.log(contacts[i]))
 
 
-                // var data = [
-                //   {email: "usera@gmail.com",nama:"User A", Level:"Super Admin"},
-                //   {email: "userb@gmail.com",nama:"User B", Level:"Super Admin"},
-                //   {email: "userc@gmail.com",nama:"User C", Level:"Standart"},
-                //   {email: "userd@gmail.com",nama:"User D", Level:"Standart"},
-                //   {email: "usere@gmail.com",nama:"User E", Level:"Admin"},
-                //   {email: "userf@gmail.com",nama:"User F", Level:"Standart"}
-                // ];
-                // var filter = "Level";
-                // var keyword = "Standart";
-                
-                // var filteredData = data.filter(function(obj) {
-                //   return obj[filter] === keyword;
-                // });
 
-                // Object.keys(contacts).map(i => {
-                //     contacts.filter(function(obj){
-                //     console.log(obj[i.first_name] === 'asd')
-                //   })
-                // })
+                  // var data = [
+                  //   {email: "usera@gmail.com",nama:"User A", Level:"Super Admin"},
+                  //   {email: "userb@gmail.com",nama:"User B", Level:"Super Admin"},
+                  //   {email: "userc@gmail.com",nama:"User C", Level:"Standart"},
+                  //   {email: "userd@gmail.com",nama:"User D", Level:"Standart"},
+                  //   {email: "usere@gmail.com",nama:"User E", Level:"Admin"},
+                  //   {email: "userf@gmail.com",nama:"User F", Level:"Standart"}
+                  // ];
+                  // var filter = "Level";
+                  // var keyword = "Standart";
 
-                  
-                
-                filteredSearch.map(i => (
-                  <TableRow key={contacts[i].contact_id}>
-                     <TableCell component="th" scope="row">
-                       {contacts[i].first_name}
-                     </TableCell>
-                     <TableCell align="right">{contacts[i].last_name}</TableCell>
-                     <TableCell align="right">{contacts[i].mobile_phone}</TableCell>
-                     <TableCell align="right">
+                  // var filteredData = data.filter(function(obj) {
+                  //   return obj[filter] === keyword;
+                  // });
+
+                  // Object.keys(contacts).map(i => {
+                  //     contacts.filter(function(obj){
+                  //     console.log(obj[i.first_name] === 'asd')
+                  //   })
+                  // })
 
 
-                       <Fab size="small" onClick={function() {
-                        setOpenEdit(true)
-                        setEditId(contacts[i].contact_id)
-                      }
-                      } 
-                        
-                       style={{ backgroundColor: '#874aff' }} className={classes.action}>
-                         <EditIcon />
-                       </Fab>
+
+                  filteredSearch.map(i => (
+                    <TableRow key={contacts[i].contact_id}>
+                      <TableCell component="th" scope="row">
+                        {contacts[i].first_name}
+                      </TableCell>
+                      <TableCell align="right">{contacts[i].last_name}</TableCell>
+                      <TableCell align="right">{contacts[i].mobile_phone}</TableCell>
+                      <TableCell align="right">
 
 
-                       <Fab size="small" onClick={()=>{
-                         axios(`http://localhost:3001/api/deleteContact/${contacts[i].contact_id}`, {
-                          method: 'delete',
-                          }).then(function(res){
+                        <Fab size="small" onClick={function () {
+                          setOpenEdit(true)
+                          setEditId(contacts[i].contact_id)
+                        }
+                        }
+
+                          style={{ backgroundColor: '#874aff' }} className={classes.action}>
+                          <EditIcon />
+                        </Fab>
+
+
+                        <Fab size="small" onClick={() => {
+                          axios(`http://localhost:3001/api/deleteContact/${contacts[i].contact_id}`, {
+                            method: 'delete',
+                          }).then(function (res) {
                             setComponent(true)
                             // console.log(res)
                           })
-                       }} style={{ backgroundColor: '#f50057',  margin: '0 10px' }} className={classes.action}>
-                         <DeleteIcon />
-                       </Fab>
+                        }} style={{ backgroundColor: '#f50057', margin: '0 10px' }} className={classes.action}>
+                          <DeleteIcon />
+                        </Fab>
 
 
-                       <Fab size="small" style={{ backgroundColor: '#07bc0c' }} className={classes.action}>
-                         <GroupAddIcon />
-                       </Fab>
+                        <Fab size="small" style={{ backgroundColor: '#07bc0c' }} className={classes.action}>
+                          <GroupAddIcon />
+                        </Fab>
 
 
-                     </TableCell>
-                   </TableRow>
-                ))
-                :
-                null
-              }
+                      </TableCell>
+                    </TableRow>
+                  ))
+                  :
+                  null
+                }
               </TableBody>
             </Table>
           </Paper>
@@ -291,10 +324,10 @@ if(component){
       </Grid>
 
 
-      {open ? <AddContact openDialog={open} handleClose={handleClose} handleComponent={handleComponent}/> : <React.Fragment></React.Fragment>}
-      {openEdit ? <EditContact openDialog={openEdit} editId={editId} handleClose={handleCloseEdit} handleComponent={handleComponent}/> : <React.Fragment></React.Fragment>}
+      {open ? <AddContact openDialog={open} handleClose={handleClose} handleComponent={handleComponent} /> : <React.Fragment></React.Fragment>}
+      {openEdit ? <EditContact openDialog={openEdit} editId={editId} handleClose={handleCloseEdit} handleComponent={handleComponent} /> : <React.Fragment></React.Fragment>}
 
-      
+
     </React.Fragment>
   );
 }

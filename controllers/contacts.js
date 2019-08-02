@@ -25,7 +25,7 @@ function getContact(req, res){
   const db = req.app.get('db');
   const { user_id } = req.params;
 
-  db.query(`SELECT * FROM contacts, addressbook WHERE addressbook.contact_id = contacts.id AND addressbook.user_id = ${user_id}`)
+  db.query(`SELECT * FROM contacts, addressbook WHERE addressbook.contact_id = contacts.id AND addressbook.user_id = ${user_id} ORDER BY contacts.first_name ASC`)
   .then(contacts => {
       res.status(201).json({ ...contacts});
   })
@@ -75,10 +75,66 @@ function editContact(req, res){
 
 }
 
+function fnameContact(req, res){
+  const db = req.app.get('db');
+  const { user_id } = req.params;
+
+  db.query(`SELECT * FROM contacts, addressbook WHERE addressbook.contact_id = contacts.id AND addressbook.user_id = ${user_id} ORDER BY contacts.first_name ASC`)
+  .then(contacts => {
+      res.status(200).json({ ...contacts});
+  })
+  .catch(err => {
+    res.status(500).end()
+  });
+}
+
+function fnameContactDesc(req, res){
+  const db = req.app.get('db');
+  const { user_id } = req.params;
+
+  db.query(`SELECT * FROM contacts, addressbook WHERE addressbook.contact_id = contacts.id AND addressbook.user_id = ${user_id} ORDER BY contacts.first_name DESC`)
+  .then(contacts => {
+      res.status(200).json({ ...contacts});
+  })
+  .catch(err => {
+    res.status(500).end()
+  });
+}
+
+function lnameContact(req, res){
+  const db = req.app.get('db');
+  const { user_id } = req.params;
+
+  db.query(`SELECT * FROM contacts, addressbook WHERE addressbook.contact_id = contacts.id AND addressbook.user_id = ${user_id} ORDER BY contacts.last_name ASC`)
+  .then(contacts => {
+      res.status(200).json({ ...contacts});
+  })
+  .catch(err => {
+    res.status(500).end()
+  });
+}
+
+function lnameContactDesc(req, res){
+  const db = req.app.get('db');
+  const { user_id } = req.params;
+
+  db.query(`SELECT * FROM contacts, addressbook WHERE addressbook.contact_id = contacts.id AND addressbook.user_id = ${user_id} ORDER BY contacts.last_name DESC`)
+  .then(contacts => {
+      res.status(200).json({ ...contacts});
+  })
+  .catch(err => {
+    res.status(500).end()
+  });
+}
+
 module.exports = {
     addContact,
     getContact,
     deleteContact,
     getContactInfo,
     editContact,
+    fnameContact,
+    lnameContact,
+    fnameContactDesc,
+    lnameContactDesc,
 }

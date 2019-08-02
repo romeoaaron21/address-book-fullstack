@@ -32,4 +32,8 @@ massive({
     app.delete('/api/deleteContact/:contacts_id', contacts.deleteContact);
     app.get('/api/getContactInfo/:contacts_id', contacts.getContactInfo)
     app.patch('/api/editContact/:contacts_id', contacts.editContact)
+    app.get('/api/sortContactFname/:user_id', contacts.fnameContact)
+    app.get('/api/sortContactLname/:user_id', contacts.lnameContact)
+    app.get('/api/sortContactFnameDesc/:user_id', contacts.fnameContactDesc)
+    app.get('/api/sortContactLnameDesc/:user_id', contacts.lnameContactDesc)
 })
