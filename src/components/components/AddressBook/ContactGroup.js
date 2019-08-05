@@ -70,7 +70,6 @@ if (component) {
       method: 'get',
     }).then(function (res) {
       setGroups(res.data)
-      console.log(res)
     })
     setComponent(false);
 }

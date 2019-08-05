@@ -24,14 +24,14 @@ function getGroup(req, res){
   
     db.query(`SELECT * FROM groups WHERE user_id=${user_id} ORDER BY name ASC`)
     .then(groups => {
-        res.status(201).json({ ...groups});
+        res.status(200).json([...groups]);
     })
     .catch(err => {
       res.status(500).end()
     });
   }
 
-  function deleteGroup(req, res){
+function deleteGroup(req, res){
     const db = req.app.get('db');
     const { group_id } = req.params;
   
@@ -42,13 +42,27 @@ function getGroup(req, res){
     .catch(err => {
       res.status(500).end()
     });
-  }
+}
 
+function addGroupMembers(req, res){
+  const db = req.app.get('db');
+  const  groups  = req.body;
+  
+  groups.map(group => {
+    db.group_members
+    .insert({
+      contact_id: req.params.contact_id,
+      group_id: group
+    })
+  })
+  res.status(201).json('Successfully Added!')
+}
 
 module.exports = {
     addGroup,
     getGroup,
     deleteGroup,
+    addGroupMembers,
 }
 
 

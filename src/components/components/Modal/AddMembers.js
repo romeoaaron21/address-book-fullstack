@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import axios from 'axios';
+import clsx from 'clsx';
 
 //material-ui core
 import Button from '@material-ui/core/Button';
@@ -14,6 +15,17 @@ import TextField from '@material-ui/core/TextField';
 //material-ui icons
 import Close from '@material-ui/icons/Close';
 import GroupAdd from '@material-ui/icons/GroupAdd';
+
+
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import ListItemText from '@material-ui/core/ListItemText';
+import Select from '@material-ui/core/Select';
+import Checkbox from '@material-ui/core/Checkbox';
+import Chip from '@material-ui/core/Chip';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -48,11 +60,45 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function AddMembers({ handleClose, openDialog, handleComponent, contactId }) {
-    const id = localStorage.getItem('id');
-    const [state, setState] = useState((''))
 
-    console.log(contactId)
+
+
+
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+
+
+
+
+
+
+export default function AddMembers({ handleClose, openDialog, handleComponent, contactId }) {
+    const user_id = localStorage.getItem('id');
+    const [component, setComponent] = useState(true);
+    const [groups, setGroups] = useState([]);
+    const [groupName, setGroupName] = useState([]);
+
+
+
+    if (component) {
+        axios(`http://localhost:3001/api/getGroup/${user_id}`, {
+          method: 'get',
+        }).then(function (res) {
+          setGroups(res.data)
+        })
+        setComponent(false);
+        
+    }
 
     const classes = useStyles();
     return (
@@ -65,16 +111,25 @@ export default function AddMembers({ handleClose, openDialog, handleComponent, c
                 </DialogTitle>
 
                 <DialogContent className={classes.dialogContent}>
-                    <TextField
-                        margin="dense"
-                        fullWidth
-                        required
-                        label="Group Name"
-                        type="text"
-                        variant="outlined"
-                        name="group_name"
-                        onChange={e=>{setState(e.target.value)}}
-                    />
+
+                <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="select-multiple-checkbox">Tag</InputLabel>
+                    <Select
+                    multiple
+                    style={{width:'55vh'}}
+                    value={groupName}
+                    onChange={e=>setGroupName(e.target.value)}
+                    MenuProps={MenuProps}
+                    >
+                    {groups.map(group=> (
+                        <MenuItem key={group.id} value={group.id}>
+                        {group.name}
+                      </MenuItem>
+    
+                    ))}
+                    </Select>
+                </FormControl>
+                   
                 </DialogContent>
 
                 
@@ -83,13 +138,14 @@ export default function AddMembers({ handleClose, openDialog, handleComponent, c
                         CANCEL
                     </Button>
                     <Button className={classes.submit} onClick={() => {
-                        // axios(`http://localhost:3001/api/addGroup/${id}/${state}`, {
-                        //     method: 'post',
-                        // }).then(function(res) {
-                        //     console.log(res)
-                        //     handleComponent();
-                        //     handleClose();
-                        // })
+                        axios(`http://localhost:3001/api/addGroupMembers/${contactId}`, {
+                            method: 'post',
+                            data: groupName,
+                            json:true
+                        }).then(function(res) {
+                            handleComponent();
+                            handleClose();
+                        })
                     }}
                     >
                         ADD CONTACT
