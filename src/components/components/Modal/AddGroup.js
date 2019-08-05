@@ -13,15 +13,15 @@ import TextField from '@material-ui/core/TextField';
 
 //material-ui icons
 import Close from '@material-ui/icons/Close';
-import PersonAdd from '@material-ui/icons/PersonAdd';
+import GroupAdd from '@material-ui/icons/GroupAdd';
 
 
 const useStyles = makeStyles(theme => ({
     cancel: {
         backgroundColor: '#ff5151', 
         color: 'white', 
-        margin: '15px 0', 
-        padding: '10px 30px'
+        margin: '0 5px',
+        padding: '10px 20px'
     },
     closeIcon: {
         float:'right', 
@@ -42,167 +42,51 @@ const useStyles = makeStyles(theme => ({
     submit: {
         backgroundColor: '#833ab4', 
         color: 'white', 
-        margin: '15px', 
-        padding: '10px 30px',
+        margin: '0 5px', 
+        padding: '10px 20px',
     },
 }));
 
 
 export default function AddContact({ handleClose, openDialog, handleComponent }) {
     const id = localStorage.getItem('id');
-    const [state, setState] = useState({
-        first_name: '',
-        last_name: '',
-        home_phone: '',
-        mobile_phone: '',
-        work_phone: '',
-        postal_code: '',
-        email: '',
-        city: '',
-        country: '',
-        state: '',
-        user_id: id,
-    })
-
-    const updateState = e => {
-        setState({
-            ...state,
-            [e.target.name]: e.target.value
-        });
-    };
+    const [state, setState] = useState((''))
 
     const classes = useStyles();
     return (
         <React.Fragment>
-            <Dialog open={openDialog} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'sm'} fullWidth={true}>
+            <Dialog open={openDialog} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'xs'} fullWidth={true}>
                 <DialogTitle className={classes.dialogTitle}>
-                    <PersonAdd className={classes.icon} />
-                    <span style={{marginLeft: '40px'}}>Add New Contact to Address Book</span> 
+                    <GroupAdd className={classes.icon} />
+                    <span style={{marginLeft: '40px'}}>Add New Group to Address Book</span> 
                     <Close className={classes.closeIcon} onClick={handleClose}/>
                 </DialogTitle>
 
                 <DialogContent className={classes.dialogContent}>
                     <TextField
                         margin="dense"
-                        style={{ width: '48.5%' }}
-                        required
-                        label="First Name"
-                        type="text"
-                        variant="outlined"
-                        name="first_name"
-                        onChange={updateState}
-                    />
-                    <TextField
-                        margin="dense"
-                        style={{ width: '48.5%' }}
-                        label="Last Name"
-                        type="text"
-                        variant="outlined"
-                        name="last_name"
-                        onChange={updateState}
-                    />
-                </DialogContent>
-
-                <DialogContent className={classes.dialogContent}>
-                    <TextField
-                        margin="dense"
                         fullWidth
-                        label="Email Address"
+                        required
+                        label="Group Name"
                         type="text"
                         variant="outlined"
-                        name="email"
-                        onChange={updateState}
+                        name="group_name"
+                        onChange={e=>{setState(e.target.value)}}
                     />
                 </DialogContent>
 
-                <DialogContent className={classes.dialogContent}>
-                    <TextField
-                        margin="dense"
-                        style={{ width: '32%' }}
-                        label="Home Phone"
-                        type="text"
-                        variant="outlined"
-                        name="home_phone"
-                        onChange={updateState}
-                    />
-                    <TextField
-                        margin="dense"
-                        style={{ width: '32%' }}
-                        label="Mobile Phone"
-                        type="text"
-                        variant="outlined"
-                        name="mobile_phone"
-                        onChange={updateState}
-                    />
-                    <TextField
-                        margin="dense"
-                        style={{ width: '32%' }}
-                        label="Work Phone"
-                        type="text"
-                        variant="outlined"
-                        name="work_phone"
-                        onChange={updateState}
-                    />
-                </DialogContent>
-
-                <DialogContent className={classes.dialogContent}>
-                    <TextField
-                        margin="dense"
-                        style={{ width: '60%' }}
-                        label="City"
-                        type="text"
-                        variant="outlined"
-                        name="city"
-                        onChange={updateState}
-                    />
-                    <TextField
-                        margin="dense"
-                        style={{ width: '38%' }}
-                        label="Postal Code"
-                        type="text"
-                        variant="outlined"
-                        name="postal_code"
-                        onChange={updateState}
-                    />
-                </DialogContent>
-
-                <DialogContent className={classes.dialogContent}>
-                    <TextField
-                        margin="dense"
-                        style={{ width: '48.5%' }}
-                        label="State / Province"
-                        type="text"
-                        variant="outlined"
-                        name="state"
-                        onChange={updateState}
-                    />
-                    <TextField
-                        margin="dense"
-                        style={{ width: '48.5%' }}
-                        label="Country"
-                        type="text"
-                        variant="outlined"
-                        name="country"
-                        onChange={updateState}
-                    />
-                </DialogContent>
-
+                
                 <DialogActions>
                     <Button onClick={handleClose} className={classes.cancel}>
                         CANCEL
                     </Button>
                     <Button className={classes.submit} onClick={() => {
-                        axios('http://localhost:3001/api/addContact', {
+                        axios(`http://localhost:3001/api/addGroup/${id}/${state}`, {
                             method: 'post',
-                            data: state,
-                        }).then(function (res) {
-                            console.log(res);
+                        }).then(function(res) {
+                            console.log(res)
                             handleComponent();
                             handleClose();
-                            // window.location.reload();
-                            // window.location.href=window.location.href
-                            // setToken(res.data.token)
-                            // window.location.href = '#/addressBook';
                         })
                     }}>
                         ADD CONTACT

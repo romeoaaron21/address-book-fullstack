@@ -353,6 +353,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 //components
 import AddContact from './components/Modal/AddContact';
+import AddMembers from './components/Modal/AddMembers';
 import ContactGroup from './components/AddressBook/ContactGroup';
 import EditContact from './components/Modal/EditContact';
 import NavHeader from './components/AddressBook/NavHeader';
@@ -459,8 +460,10 @@ export default function AddressBook() {
   const user = localStorage.getItem('user');
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [editId, setEditId] = useState('');
+  const [openMembers, setOpenMembers] = useState(false);
+  const [contactId, setContactId] = useState('');
   const [searchVal, setSearchVal] = useState('');
+
 
 
   const [component, setComponent] = useState(true);
@@ -477,6 +480,9 @@ export default function AddressBook() {
     setComponent(false);
   }
 
+  function handleCloseMembers() {
+    setOpenMembers(false);
+  }
   function handleCloseEdit() {
     setOpenEdit(false);
   }
@@ -500,7 +506,6 @@ export default function AddressBook() {
     let lname = contacts[obj].last_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
     if(fname){return fname} else{return lname}
   })
-
 
   const classes = useStyles();
   return (
@@ -582,7 +587,7 @@ export default function AddressBook() {
 
                         <Fab size="small" onClick={function () {
                           setOpenEdit(true)
-                          setEditId(contacts[i].contact_id)
+                          setContactId(contacts[i].contact_id)
                           }
                         }
                           style={{ backgroundColor: '#874aff' }} className={classes.action}>
@@ -600,7 +605,12 @@ export default function AddressBook() {
                           <DeleteIcon />
                         </Fab>
 
-                        <Fab size="small" style={{ backgroundColor: '#07bc0c' }} className={classes.action}>
+                        <Fab size="small" onClick={function () {
+                          setOpenMembers(true)
+                          setContactId(contacts[i].contact_id)
+                          }
+                        }
+                        style={{ backgroundColor: '#07bc0c' }} className={classes.action}>
                           <GroupAddIcon />
                         </Fab>
 
@@ -619,7 +629,8 @@ export default function AddressBook() {
 
 
       {open ? <AddContact openDialog={open} handleClose={handleClose} handleComponent={handleComponent} /> : <React.Fragment></React.Fragment>}
-      {openEdit ? <EditContact openDialog={openEdit} editId={editId} handleClose={handleCloseEdit} handleComponent={handleComponent} /> : <React.Fragment></React.Fragment>}
+      {openEdit ? <EditContact openDialog={openEdit} editId={contactId} handleClose={handleCloseEdit} handleComponent={handleComponent} /> : <React.Fragment></React.Fragment>}
+      {openMembers ? <AddMembers openDialog={openMembers} handleClose={handleCloseMembers} handleComponent={handleComponent} contactId={contactId} /> : <React.Fragment></React.Fragment>}
 
 
     </React.Fragment>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
 
 //components
 import AddGroup from '../Modal/AddGroup';
@@ -58,10 +59,21 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function ContactGroup() {
+    const user_id = localStorage.getItem('id');
     const [openGroup, setOpenGroup] = useState(false);
     const [component, setComponent] = useState(true);
+    const [groups, setGroups] = useState([])
     const classes = useStyles();
 
+if (component) {
+    axios(`http://localhost:3001/api/getGroup/${user_id}`, {
+      method: 'get',
+    }).then(function (res) {
+      setGroups(res.data)
+      console.log(res)
+    })
+    setComponent(false);
+}
     
   function handleCloseGroup() {
     setOpenGroup(false);
@@ -88,7 +100,41 @@ export default function ContactGroup() {
                     <Divider />
 
                     <List component="nav">
+                    {!component ?
+                    Object.keys(groups).map(i => (
+                        <React.Fragment>
+                    
                         <ListItem button>
+                            <ListItemAvatar>
+                                <Avatar className={classes.icon}>
+                                    <GroupIcon />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary={groups[i].name} />
+                            <ListItemSecondaryAction>
+                                <IconButton edge="end" aria-label="delete">
+                                    <DeleteIcon onClick={()=>{
+                                        axios(`http://localhost:3001/api/deleteGroup/${groups[i].id}`, {
+                                            method: 'delete',
+                                          }).then(function (res) {
+                                            setComponent(true)
+                                            // console.log(res)
+                                          })
+                                    }}/>
+                                </IconButton>
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                        <Divider />
+
+                        </React.Fragment>
+                    ))
+                    :
+                    null
+
+                    }
+
+
+                        {/* <ListItem button>
                             <ListItemAvatar>
                                 <Avatar className={classes.icon}>
                                     <GroupIcon />
@@ -114,7 +160,7 @@ export default function ContactGroup() {
                                     <DeleteIcon />
                                 </IconButton>
                             </ListItemSecondaryAction>
-                        </ListItem>
+                        </ListItem> */}
                     </List>
                 </Paper>
             </Grid>

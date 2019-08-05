@@ -2,6 +2,7 @@ const express = require('express');
 const massive = require('massive');
 const users = require('../controllers/users')
 const contacts = require('../controllers/contacts')
+const groups = require('../controllers/groups')
 const cors = require("cors");
 
 
@@ -27,6 +28,7 @@ massive({
 
     app.post('/api/register', users.register);
     app.post('/api/login', users.login);
+
     app.post('/api/addContact', contacts.addContact);
     app.get('/api/getContact/:user_id', contacts.getContact);
     app.delete('/api/deleteContact/:contacts_id', contacts.deleteContact);
@@ -36,4 +38,8 @@ massive({
     app.get('/api/sortContactLname/:user_id', contacts.lnameContact)
     app.get('/api/sortContactFnameDesc/:user_id', contacts.fnameContactDesc)
     app.get('/api/sortContactLnameDesc/:user_id', contacts.lnameContactDesc)
+
+    app.post('/api/addGroup/:user_id/:name', groups.addGroup)
+    app.get('/api/getGroup/:user_id', groups.getGroup)
+    app.delete('/api/deleteGroup/:group_id', groups.deleteGroup)
 })

@@ -38,7 +38,6 @@ function login(req, res) {
         })
       .then(user => {
 
-
         if (!user) {
           throw new Error('Invalid username');
         }
