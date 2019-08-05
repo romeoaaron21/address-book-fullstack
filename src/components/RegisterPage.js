@@ -137,7 +137,6 @@ export default function SignUp() {
                 required
                 fullWidth
                 label="First Name"
-                autoFocus
               />
             </Grid>
             <Grid item xs={12} sm={6}>
