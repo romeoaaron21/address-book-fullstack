@@ -43,4 +43,6 @@ massive({
     app.get('/api/getGroup/:user_id', groups.getGroup)
     app.delete('/api/deleteGroup/:group_id', groups.deleteGroup)
     app.post('/api/addGroupMembers/:contact_id', groups.addGroupMembers)
+    app.get('/api/getMembers/:group_id', groups.getMembers)
+    app.delete('/api/deleteMember/:contact_id/:group_id', groups.deleteMember)
 })

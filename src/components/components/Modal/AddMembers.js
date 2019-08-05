@@ -116,7 +116,7 @@ export default function AddMembers({ handleClose, openDialog, handleComponent, c
                     <InputLabel htmlFor="select-multiple-checkbox">Tag</InputLabel>
                     <Select
                     multiple
-                    style={{width:'55vh'}}
+                    style={{width:'40vh'}}
                     value={groupName}
                     onChange={e=>setGroupName(e.target.value)}
                     MenuProps={MenuProps}
@@ -141,7 +141,6 @@ export default function AddMembers({ handleClose, openDialog, handleComponent, c
                         axios(`http://localhost:3001/api/addGroupMembers/${contactId}`, {
                             method: 'post',
                             data: groupName,
-                            json:true
                         }).then(function(res) {
                             handleComponent();
                             handleClose();

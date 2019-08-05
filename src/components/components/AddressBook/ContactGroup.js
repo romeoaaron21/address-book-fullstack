@@ -4,6 +4,7 @@ import axios from 'axios';
 
 //components
 import AddGroup from '../Modal/AddGroup';
+import ViewMembers from '../Modal/ViewMembers';
 
 //material-ui components
 import Avatar from '@material-ui/core/Avatar';
@@ -61,8 +62,10 @@ const useStyles = makeStyles(theme => ({
 export default function ContactGroup() {
     const user_id = localStorage.getItem('id');
     const [openGroup, setOpenGroup] = useState(false);
+    const [openMembers, setOpenMembers] = useState(false);
     const [component, setComponent] = useState(true);
-    const [groups, setGroups] = useState([])
+    const [groups, setGroups] = useState([]);
+    const [groupId, setGroupId] = useState('')
     const classes = useStyles();
 
 if (component) {
@@ -73,7 +76,10 @@ if (component) {
     })
     setComponent(false);
 }
-    
+
+  function handleCloseMembers() {
+    setOpenMembers(false);
+  }
   function handleCloseGroup() {
     setOpenGroup(false);
   }
@@ -103,7 +109,10 @@ if (component) {
                     Object.keys(groups).map(i => (
                         <React.Fragment>
                     
-                        <ListItem button>
+                        <ListItem button onClick={()=>{
+                                setOpenMembers(true)
+                                setGroupId(groups[i].id)}
+                        }>
                             <ListItemAvatar>
                                 <Avatar className={classes.icon}>
                                     <GroupIcon />
@@ -129,42 +138,13 @@ if (component) {
                     ))
                     :
                     null
-
                     }
-
-
-                        {/* <ListItem button>
-                            <ListItemAvatar>
-                                <Avatar className={classes.icon}>
-                                    <GroupIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary="Sample Group 1" />
-                            <ListItemSecondaryAction>
-                                <IconButton edge="end" aria-label="delete">
-                                    <DeleteIcon />
-                                </IconButton>
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                        <Divider />
-                        <ListItem button>
-                            <ListItemAvatar>
-                                <Avatar className={classes.icon}>
-                                    <GroupIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary="Sample Group 2" />
-                            <ListItemSecondaryAction>
-                                <IconButton edge="end" aria-label="delete">
-                                    <DeleteIcon />
-                                </IconButton>
-                            </ListItemSecondaryAction>
-                        </ListItem> */}
                     </List>
                 </Paper>
             </Grid>
 
             {openGroup ? <AddGroup openDialog={openGroup} handleClose={handleCloseGroup} handleComponent={handleComponent} /> : <React.Fragment></React.Fragment>}
+            {openMembers? <ViewMembers openDialog={openMembers} groupId={groupId} handleClose={handleCloseMembers} handleComponent={handleComponent} /> : <React.Fragment></React.Fragment>}
 
         </React.Fragment>
         
