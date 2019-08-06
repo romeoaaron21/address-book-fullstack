@@ -356,6 +356,7 @@ import AddContact from './components/Modal/AddContact';
 import AddMembers from './components/Modal/AddMembers';
 import ContactGroup from './components/AddressBook/ContactGroup';
 import EditContact from './components/Modal/EditContact';
+import Loader from './components/Loader/Loader';
 import NavHeader from './components/AddressBook/NavHeader';
 
 //material-ui components
@@ -493,18 +494,10 @@ export default function AddressBook() {
     setComponent(true)
   }
 
-
-  // let filteredSearch = Object.keys(contacts).filter(function (obj) {
-  //   let fname = [contacts[obj].first_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1];
-  //   let lname = [contacts[obj].last_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1];
-  //   var names = fname.includes(lname);
-  //   return names
-  // })
-
   let filteredSearch = Object.keys(contacts).filter(function (obj) {
     let fname = contacts[obj].first_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
     let lname = contacts[obj].last_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
-    if(fname){return fname} else{return lname}
+    if (fname) { return fname } else { return lname }
   })
 
   const classes = useStyles();
@@ -512,121 +505,124 @@ export default function AddressBook() {
 
     <React.Fragment>
       <NavHeader user={user} />
+      {!component && contacts[0] ?
+        
+        <Grid container spacing={0} style={{ padding: '50px' }}>
+          <ContactGroup />
+          <Grid item xs={12}>
+            <Paper className={classes.root}>
+              <Typography className={classes.title} >
 
-      <Grid container spacing={0} style={{ padding: '50px' }}>
-        <ContactGroup />
+                <IconButton className={classes.searchButton} aria-label="search">
+                  <SearchIcon />
+                </IconButton>
+                <InputBase className={classes.searchInput} placeholder="Search Contact List" onChange={e => setSearchVal(e.target.value)} />
 
-        <Grid item xs={12}>
-          <Paper className={classes.root}>
-            <Typography className={classes.title} >
+                <span className={classes.addContactButon}>
+                  <Fab size="medium" style={{ backgroundColor: '#833ab4' }} aria-label="add">
+                    <AddIcon className={classes.addIcon} onClick={() => setOpen(true)} />
+                  </Fab>
+                </span>
+              </Typography>
 
-              <IconButton className={classes.searchButton} aria-label="search">
-                <SearchIcon />
-              </IconButton>
-              <InputBase className={classes.searchInput} placeholder="Search Contact List" onChange={e => setSearchVal(e.target.value)} />
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>FIRST NAME {!sortButF ? <ArrowDown style={{ marginLeft: '5px' }} onClick={() => {
+                      axios(`http://localhost:3001/api/sortContactFname/${user_id}`, {
+                        method: 'get',
+                      }).then(function (res) {
+                        setContacts(res.data)
+                        setSortButF(true)
+                        console.log(res)
+                      })
+                    }} /> : <ArrowUpward style={{ marginLeft: '5px' }} onClick={() => {
+                      axios(`http://localhost:3001/api/sortContactFnameDesc/${user_id}`, {
+                        method: 'get',
+                      }).then(function (res) {
+                        setContacts(res.data)
+                        setSortButF(false)
+                        console.log(res)
+                      })
+                    }} />}</TableCell>
+                    <TableCell align="right">LAST NAME {!sortBut ? <ArrowDown style={{ marginLeft: '5px' }} onClick={() => {
+                      axios(`http://localhost:3001/api/sortContactLname/${user_id}`, {
+                        method: 'get',
+                      }).then(function (res) {
+                        setContacts(res.data)
+                        setSortBut(true)
+                        console.log(res)
+                      })
+                    }} /> : <ArrowUpward style={{ marginLeft: '5px' }} onClick={() => {
+                      axios(`http://localhost:3001/api/sortContactLnameDesc/${user_id}`, {
+                        method: 'get',
+                      }).then(function (res) {
+                        setContacts(res.data)
+                        setSortBut(false)
+                        console.log(res)
+                      })
+                    }} />}</TableCell>
+                    <TableCell align="right">MOBILE NUMBER</TableCell>
+                    <TableCell align="right">ACTION </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {!component && contacts[0] ?
 
-              <span className={classes.addContactButon}>
-                <Fab size="medium" style={{ backgroundColor: '#833ab4' }} aria-label="add">
-                  <AddIcon className={classes.addIcon} onClick={() => setOpen(true)} />
-                </Fab>
-              </span>
-            </Typography>
+                    filteredSearch.map(i => (
+                      <TableRow key={contacts[i].contact_id}>
+                        <TableCell component="th" scope="row">
+                          {contacts[i].first_name}
+                        </TableCell>
+                        <TableCell align="right">{contacts[i].last_name}</TableCell>
+                        <TableCell align="right">{contacts[i].mobile_phone}</TableCell>
+                        <TableCell align="right">
 
-            <Table className={classes.table}>
-               <TableHead>
-                 <TableRow>
-                   <TableCell>FIRST NAME {!sortButF ? <ArrowDown style={{ marginLeft: '5px' }} onClick={() => {
-                    axios(`http://localhost:3001/api/sortContactFname/${user_id}`, {
-                      method: 'get',
-                    }).then(function (res) {
-                      setContacts(res.data)
-                      setSortButF(true)
-                      console.log(res)
-                    })
-                  }} /> : <ArrowUpward style={{ marginLeft: '5px' }} onClick={() => {
-                    axios(`http://localhost:3001/api/sortContactFnameDesc/${user_id}`, {
-                      method: 'get',
-                    }).then(function (res) {
-                      setContacts(res.data)
-                      setSortButF(false)
-                      console.log(res)
-                    })
-                  }} />}</TableCell>
-                  <TableCell align="right">LAST NAME {!sortBut ? <ArrowDown style={{ marginLeft: '5px' }} onClick={() => {
-                    axios(`http://localhost:3001/api/sortContactLname/${user_id}`, {
-                      method: 'get',
-                    }).then(function (res) {
-                      setContacts(res.data)
-                      setSortBut(true)
-                      console.log(res)
-                    })
-                  }} /> : <ArrowUpward style={{ marginLeft: '5px' }} onClick={() => {
-                    axios(`http://localhost:3001/api/sortContactLnameDesc/${user_id}`, {
-                      method: 'get',
-                    }).then(function (res) {
-                      setContacts(res.data)
-                      setSortBut(false)
-                      console.log(res)
-                    })
-                  }} />}</TableCell>
-                  <TableCell align="right">MOBILE NUMBER</TableCell>
-                  <TableCell align="right">ACTION </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {!component && contacts[0]?
-
-                  filteredSearch.map(i => (
-                    <TableRow key={contacts[i].contact_id}>
-                      <TableCell component="th" scope="row">
-                        {contacts[i].first_name}
-                      </TableCell>
-                      <TableCell align="right">{contacts[i].last_name}</TableCell>
-                      <TableCell align="right">{contacts[i].mobile_phone}</TableCell>
-                      <TableCell align="right">
-
-                        <Fab size="small" onClick={function () {
-                          setOpenEdit(true)
-                          setContactId(contacts[i].contact_id)
+                          <Fab size="small" onClick={function () {
+                            setOpenEdit(true)
+                            setContactId(contacts[i].contact_id)
                           }
-                        }
-                          style={{ backgroundColor: '#874aff' }} className={classes.action}>
-                          <EditIcon />
-                        </Fab>
-
-                        <Fab size="small" onClick={() => {
-                          axios(`http://localhost:3001/api/deleteContact/${contacts[i].contact_id}`, {
-                            method: 'delete',
-                          }).then(function (res) {
-                            setComponent(true)
-                            // console.log(res)
-                          })
-                        }} style={{ backgroundColor: '#f50057', margin: '0 10px' }} className={classes.action}>
-                          <DeleteIcon />
-                        </Fab>
-
-                        <Fab size="small" onClick={function () {
-                          setOpenMembers(true)
-                          setContactId(contacts[i].contact_id)
                           }
-                        }
-                        style={{ backgroundColor: '#07bc0c' }} className={classes.action}>
-                          <GroupAddIcon />
-                        </Fab>
+                            style={{ backgroundColor: '#874aff' }} className={classes.action}>
+                            <EditIcon />
+                          </Fab>
+
+                          <Fab size="small" onClick={() => {
+                            axios(`http://localhost:3001/api/deleteContact/${contacts[i].contact_id}`, {
+                              method: 'delete',
+                            }).then(function (res) {
+                              setComponent(true)
+                            })
+                          }} style={{ backgroundColor: '#f50057', margin: '0 10px' }} className={classes.action}>
+                            <DeleteIcon />
+                          </Fab>
+
+                          <Fab size="small" onClick={function () {
+                            setOpenMembers(true)
+                            setContactId(contacts[i].contact_id)
+                          }
+                          }
+                            style={{ backgroundColor: '#07bc0c' }} className={classes.action}>
+                            <GroupAddIcon />
+                          </Fab>
 
 
-                      </TableCell>
-                    </TableRow>
-                  ))
-                  :
-                  null
-                }
-              </TableBody>
-            </Table>
-          </Paper>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                    :
+                    null
+                  }
+                </TableBody>
+              </Table>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
-
+        :
+        <React.Fragment>
+        <Loader />
+        </React.Fragment>
+      }
 
       {open ? <AddContact openDialog={open} handleClose={handleClose} handleComponent={handleComponent} /> : <React.Fragment></React.Fragment>}
       {openEdit ? <EditContact openDialog={openEdit} editId={contactId} handleClose={handleCloseEdit} handleComponent={handleComponent} /> : <React.Fragment></React.Fragment>}

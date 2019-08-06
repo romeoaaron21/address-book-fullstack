@@ -89,7 +89,7 @@ export default function AddContact({ handleClose, openDialog, handleComponent })
                             handleClose();
                         })
                     }}>
-                        ADD CONTACT
+                        ADD GROUP
                     </Button>
                 </DialogActions>
             </Dialog>

@@ -93,7 +93,7 @@ export default function AddContact({ handleClose, openDialog, groupId }) {
             <Dialog open={openDialog} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'lg'} fullWidth={true}>
                 <DialogTitle className={classes.dialogTitle}>
                     <GroupAdd className={classes.icon} />
-                    <span style={{marginLeft: '40px'}}>Add New Group to Address Book</span> 
+                    <span style={{marginLeft: '40px'}}>View List of Group Members</span> 
                     <Close className={classes.closeIcon} onClick={handleClose}/>
                 </DialogTitle>
 

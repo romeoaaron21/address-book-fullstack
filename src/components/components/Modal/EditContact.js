@@ -1,15 +1,54 @@
 import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
 
+//components
+import LoaderEdit from '../Loader/LoaderEdit'
+
+//material-ui components
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 
-import axios from 'axios';
-import { objectTypeAnnotation } from '@babel/types';
+//material-ui icons
+import Close from '@material-ui/icons/Close';
+import PersonAdd from '@material-ui/icons/PersonAdd';
+
+
+const useStyles = makeStyles(theme => ({
+    cancel: {
+        backgroundColor: '#ff5151', 
+        color: 'white', 
+        margin: '15px 0', 
+        padding: '10px 30px'
+    },
+    closeIcon: {
+        float:'right', 
+        cursor:'pointer',
+    },
+    dialogContent: {
+        display: 'flex', 
+        justifyContent: 'space-between',
+    },
+    dialogTitle: {
+        backgroundColor: '#833ab4', 
+        color: 'white',
+    },
+    icon: {
+        fontSize:'32px', 
+        position:'absolute',
+    },
+    submit: {
+        backgroundColor: '#833ab4', 
+        color: 'white', 
+        margin: '15px', 
+        padding: '10px 30px',
+    },
+}));
+
 
 
 
@@ -39,7 +78,6 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
         axios(`http://localhost:3001/api/getContactInfo/${editId}`, {
             method: 'get',
         }).then(function(res) {
-            // console.log(res.data[0])
             setState({
                 first_name:res.data[0].first_name,
                 last_name:res.data[0].last_name,
@@ -56,34 +94,20 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
         setShowId(false);
       }
 
-    //   if(contacts.first_name.length > 0){
-    //     setState({
-    //         [first_name]:contacts.first_name,
-    //         [last_name]:contacts.last_name,
-    //         [home_phone]:contacts.home_phone,
-    //         [mobile_phone]:contacts.mobile_phone,
-    //         [work_phone]:contacts.work_phone,
-    //         [postal_code]:contacts.postal_code,
-    //         [email]:contacts.email,
-    //         [city]:contacts.city,
-    //         [country]:contacts.country,
-    //         [state]:contacts.state,
-    //       });
-    //   }
-
-
+    const classes = useStyles();
     return (
         <React.Fragment>
             <Dialog open={openDialog} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'md'} fullWidth={true}>
-                <DialogTitle id="form-dialog-title">Add New Contact to Address Book</DialogTitle>
-                {!showId && state.first_name?
-                // console.log('as')
-                // console.log((contacts))
-                // console.log(contacts.first_name)
-                // Object.entries(contacts).map(info => console.log(info))
+                <DialogTitle className={classes.dialogTitle}>
+                    <PersonAdd className={classes.icon} />
+                    <span style={{marginLeft: '40px'}}>Add New Contact to Address Book</span> 
+                    <Close className={classes.closeIcon} onClick={handleClose}/>
+                </DialogTitle>
 
+                {!showId && state.first_name?
+                
                 <React.Fragment>
-                <DialogContent style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <DialogContent className={classes.dialogContent}>
                     <TextField
                         style={{ width: '31%' }}
                         required
@@ -120,7 +144,7 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
                     />
                 </DialogContent>
 
-                <DialogContent style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <DialogContent className={classes.dialogContent}>
                     <TextField
                         style={{ width: '27%' }}
                         autoFocus
@@ -167,7 +191,7 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
                     />
                 </DialogContent>
 
-                <DialogContent style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <DialogContent className={classes.dialogContent}>
                     <TextField
                         style={{ width: '31%' }}
                         required
@@ -205,15 +229,15 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
                 </DialogContent>
                 </React.Fragment>
                 :
-                null
+                <LoaderEdit />
                 }
 
 
                 <DialogActions>
-                    <Button onClick={handleClose} style={{ backgroundColor: '#ff5151', color: 'white', margin: '15px 0', padding: '10px 30px' }}>
+                    <Button onClick={handleClose} className={classes.cancel}>
                         Cancel
           </Button>
-                    <Button style={{ backgroundColor: '#833ab4', color: 'white', margin: '15px', padding: '10px 30px' }} onClick={() => {
+                    <Button className={classes.submit} onClick={() => {
                         axios(`http://localhost:3001/api/editContact/${editId}`, {
                                     method: 'patch',
                                     data: state,
