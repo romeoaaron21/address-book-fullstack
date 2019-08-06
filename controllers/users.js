@@ -6,25 +6,37 @@ function register(req, res) {
   const db = req.app.get('db');
   const { first_name, last_name, username, password } = req.body;
 
-  argon2
-    .hash(password)
-    .then(hash => {
-      return db.users.insert({
-          first_name, last_name, username, password: hash,
-        },
-        {
-          fields: ['id', 'first_name', 'last_name', 'username'],
-        }
-      );
-    })
-    .then(user => {
-      const token = jwt.sign({ userId: user.id }, secret);
-      res.status(201).json({ ...user, token });
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).end();
-    });
+  db.users
+  .findOne({username}, {
+    fields: ['id', 'first_name', 'last_name', 'username', 'password'],
+  }).then(user => {
+    if(user){
+      res.status(400).end();
+    }
+    else{
+      argon2
+      .hash(password)
+      .then(hash => {
+        return db.users.insert({
+            first_name, last_name, username, password: hash,
+          },
+          {
+            fields: ['id', 'first_name', 'last_name', 'username'],
+          }
+        );
+      })
+      .then(user => {
+        const token = jwt.sign({ userId: user.id }, secret);
+        res.status(201).json({ ...user, token });
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(500).end();
+      });
+    }
+  })
+
+  
 }
 
 function login(req, res) {

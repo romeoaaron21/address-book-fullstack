@@ -89,11 +89,11 @@ export default function AddMembers({ handleClose, openDialog, handleComponent, c
     const [groupName, setGroupName] = useState([]);
 
 
-
     if (component) {
-        axios(`http://localhost:3001/api/getGroup/${user_id}`, {
+        axios(`http://localhost:3001/api/selectGroup/${user_id}/${contactId}`, {
           method: 'get',
         }).then(function (res) {
+            console.log(res)
           setGroups(res.data)
         })
         setComponent(false);

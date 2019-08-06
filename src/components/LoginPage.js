@@ -109,6 +109,25 @@ export default function SignIn() {
     }
   };
 
+  function submitLogin(e){
+      e.preventDefault();
+      axios('http://localhost:3001/api/login', {
+        method: 'post',
+        data: state,
+        // headers: {
+        //   'Authorization': `Bearer ${token}`
+        // }
+      }).then(function(res) {
+        setToken(res.data.token)
+        setUser(res.data.username)
+        window.location.href = '#/addressBook'
+      }).catch(() => {
+        toast.error("Invalid User Account!", {
+          position: toast.POSITION.TOP_RIGHT
+        });
+      })
+  }
+
 
 
   return (
@@ -119,7 +138,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Address Book Login
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={(e)=>submitLogin(e)}>
           <TextField
             error = {warning.username}
             onBlur={updateWarning}
@@ -131,7 +150,7 @@ export default function SignIn() {
             fullWidth
             label="Username"
             name="username"
-            autoComplete="username"
+            type="text"
           />
           <TextField
             error = {warning.password}
@@ -148,24 +167,7 @@ export default function SignIn() {
             autoComplete="current-password"
           />
           <Button
-            onClick = {()=> {
-              axios('http://localhost:3001/api/login', {
-                method: 'post',
-                data: state,
-                // headers: {
-                //   'Authorization': `Bearer ${token}`
-                // }
-              }).then(function(res) {
-                setToken(res.data.token)
-                setUser(res.data.username)
-                window.location.href = '#/addressBook'
-              }).catch(() => {
-                toast.error("Invalid User Account!", {
-                  position: toast.POSITION.TOP_RIGHT
-                });
-              })
-              }
-            }
+            type="submit"
             fullWidth
             variant="contained"
             color="primary"

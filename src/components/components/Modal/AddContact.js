@@ -72,6 +72,22 @@ export default function AddContact({ handleClose, openDialog, handleComponent })
         });
     };
 
+    function addContacts(e){
+        e.preventDefault();
+            axios('http://localhost:3001/api/addContact', {
+                method: 'post',
+                data: state,
+            }).then(function (res) {
+                console.log(res);
+                handleComponent();
+                handleClose();
+                // window.location.reload();
+                // window.location.href=window.location.href
+                // setToken(res.data.token)
+                // window.location.href = '#/addressBook';
+            })
+    }
+
     const classes = useStyles();
     return (
         <React.Fragment>
@@ -82,7 +98,8 @@ export default function AddContact({ handleClose, openDialog, handleComponent })
                     <Close className={classes.closeIcon} onClick={handleClose}/>
                 </DialogTitle>
 
-                <DialogContent className={classes.dialogContent}>
+                <form onSubmit={e=>addContacts(e)}>
+                <DialogContent className={classes.dialogContent} >
                     <TextField
                         margin="dense"
                         style={{ width: '48.5%' }}
@@ -101,6 +118,7 @@ export default function AddContact({ handleClose, openDialog, handleComponent })
                         variant="outlined"
                         name="last_name"
                         onChange={updateState}
+                        required
                     />
                 </DialogContent>
 
@@ -113,6 +131,8 @@ export default function AddContact({ handleClose, openDialog, handleComponent })
                         variant="outlined"
                         name="email"
                         onChange={updateState}
+                        type="email"
+                        required
                     />
                 </DialogContent>
 
@@ -125,15 +145,17 @@ export default function AddContact({ handleClose, openDialog, handleComponent })
                         variant="outlined"
                         name="home_phone"
                         onChange={updateState}
+                        required
                     />
                     <TextField
                         margin="dense"
                         style={{ width: '32%' }}
                         label="Mobile Phone"
-                        type="text"
+                        type="number"
                         variant="outlined"
                         name="mobile_phone"
                         onChange={updateState}
+                        required
                     />
                     <TextField
                         margin="dense"
@@ -143,6 +165,7 @@ export default function AddContact({ handleClose, openDialog, handleComponent })
                         variant="outlined"
                         name="work_phone"
                         onChange={updateState}
+                        required
                     />
                 </DialogContent>
 
@@ -155,15 +178,17 @@ export default function AddContact({ handleClose, openDialog, handleComponent })
                         variant="outlined"
                         name="city"
                         onChange={updateState}
+                        required
                     />
                     <TextField
                         margin="dense"
                         style={{ width: '38%' }}
                         label="Postal Code"
-                        type="text"
+                        type="number"
                         variant="outlined"
                         name="postal_code"
                         onChange={updateState}
+                        required
                     />
                 </DialogContent>
 
@@ -176,6 +201,7 @@ export default function AddContact({ handleClose, openDialog, handleComponent })
                         variant="outlined"
                         name="state"
                         onChange={updateState}
+                        required
                     />
                     <TextField
                         margin="dense"
@@ -185,30 +211,20 @@ export default function AddContact({ handleClose, openDialog, handleComponent })
                         variant="outlined"
                         name="country"
                         onChange={updateState}
+                        required
                     />
                 </DialogContent>
+                
 
                 <DialogActions>
                     <Button onClick={handleClose} className={classes.cancel}>
                         CANCEL
                     </Button>
-                    <Button className={classes.submit} onClick={() => {
-                        axios('http://localhost:3001/api/addContact', {
-                            method: 'post',
-                            data: state,
-                        }).then(function (res) {
-                            console.log(res);
-                            handleComponent();
-                            handleClose();
-                            // window.location.reload();
-                            // window.location.href=window.location.href
-                            // setToken(res.data.token)
-                            // window.location.href = '#/addressBook';
-                        })
-                    }}>
+                    <Button className={classes.submit} type="submit">
                         ADD CONTACT
                     </Button>
                 </DialogActions>
+                </form>
             </Dialog>
         </React.Fragment>
     )

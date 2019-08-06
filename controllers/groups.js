@@ -88,6 +88,73 @@ function deleteMember(req, res){
 
 }
 
+function selectGroup(req, res){
+  const db = req.app.get('db');
+  const { user_id, contact_id } = req.params
+
+  // db.query(`SELECT * FROM groups WHERE user_id=${user_id} ORDER BY name ASC`)
+  // .then(groups => {
+  //   res.status(200).json([...groups]);
+  // })
+
+  // db.query(`SELECT groups.id as id, groups.user_id as user_id, groups.name as name from groups INNER JOIN group_members ON groups.id!=group_members.group_id WHERE groups.user_id=${user_id} and group_members.contact_id=${contact_id}`)
+  // .then(groups => {
+  //     if(groups.length !== 0){res.status(200).json([...groups]);}
+  //     else{
+  //       db.query(`SELECT * FROM groups WHERE user_id=${user_id} ORDER BY name ASC`)
+  //       .then(groups => {
+  //           res.status(200).json([...groups]);
+  //       })
+  //     }
+  // })
+
+  // db.query(`SELECT groups.id as id, groups.user_id as user_id, groups.name as name from groups INNER JOIN group_members ON groups.id!=group_members.group_id WHERE groups.user_id=${user_id} and group_members.contact_id=${contact_id}`)
+  // .then(groups => {
+  //     if(groups.length == 0){
+  //       db.query(`SELECT * FROM groups WHERE user_id=${user_id} ORDER BY name ASC`)
+  //       .then(allgroups => {
+  //         allgroups.map(g=>{
+  //           db.query(`SELECT groups.* from groups INNER JOIN group_members ON groups.id=group_members.group_id where group_members.group_id!=${g.id} AND group_members.contact_id=${contact_id}`)
+  //           .then(answer => {
+  //             res.status(200).json([answer])
+  //           })
+  //         })
+  //       })
+  //     }
+  //     else{res.status(200).json([...groups])}
+  // })
+
+  db.query(`SELECT groups.id as id, groups.user_id as user_id, groups.name as name from groups INNER JOIN group_members ON groups.id!=group_members.group_id WHERE groups.user_id=${user_id} and group_members.contact_id=${contact_id}`)
+  .then(groups => {
+      if(groups.length == 0){
+        db.query(`SELECT * FROM groups WHERE user_id=${user_id} ORDER BY name ASC`)
+        .then(allgroups => {
+          console.log(allgroups)
+        })
+      }
+      else{res.status(200).json([...groups])}
+  })
+  .catch(err => {
+    res.status(500).end()
+  });
+}
+
+
+// function selectGroup(req, res){
+//   const db = req.app.get('db');
+//   const { user_id, contact_id } = req.params
+
+ 
+//       db.query(`SELECT * FROM groups WHERE user_id=${user_id} ORDER BY name ASC`)
+//       .then((groups)=>{
+//         res.status(200).json([...groups])
+//       })
+//   .catch(err => {
+//     res.status(500).end()
+//   });
+// }
+
+
 
 module.exports = {
     addGroup,
@@ -96,6 +163,7 @@ module.exports = {
     addGroupMembers,
     getMembers,
     deleteMember,
+    selectGroup,
 }
 
 

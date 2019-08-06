@@ -114,6 +114,26 @@ export default function SignUp() {
     }
   };
 
+  function submitRegister(e){
+    e.preventDefault()
+      // if(state.firstname === '' || state.last_name === '' || state.username === '' || state.password === '' ){
+      //   toast.error("Please fill all fields!", {
+      //     position: toast.POSITION.TOP_RIGHT
+      //   });
+      // }
+      axios('http://localhost:3001/api/register', {
+        method: 'post',
+        data: state,
+      }).then(function(res){
+        // setToken(res.data.token)
+        window.location.href = '#/'
+      }).catch(()=> {
+        toast.error("User Already Exist!", {
+          position: toast.POSITION.TOP_RIGHT
+        });
+      })
+}
+
 
   return (
     <Container component="main" style={{maxWidth:'500px'}}>
@@ -123,9 +143,9 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={e=>submitRegister(e)}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} required>
+            <Grid item xs={12} sm={6}>
               <TextField
                 error = {warning.first_name}
                 onBlur={updateWarning}
@@ -184,24 +204,7 @@ export default function SignUp() {
             </Grid>
           </Grid>
           <Button
-            onClick = {()=> {
-              if(state.firstname === '' || state.last_name === '' || state.username === '' || state.password === '' ){
-                toast.error("Please fill all fields!", {
-                  position: toast.POSITION.TOP_RIGHT
-                });
-              }
-              else{
-              axios('http://localhost:3001/api/register', {
-                method: 'post',
-                data: state,
-              }).then(function(res){
-                // setToken(res.data.token)
-                window.location.href = '#/'
-              })
-              }
-            }
-            }
-    
+            type="submit"
             fullWidth
             variant="contained"
             color="primary"
