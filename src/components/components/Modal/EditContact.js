@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
+import decode from 'jwt-decode';
 
 //components
 import LoaderEdit from '../Loader/LoaderEdit'
@@ -53,7 +54,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function EditContact({handleClose, openDialog, editId, handleComponent}) {
-    const id = localStorage.getItem('id');
+    const id = decode(localStorage.getItem('token')).userId;
     const [ showId, setShowId ] = useState(true);
     const [ state, setState ] = useState({
         first_name:'',

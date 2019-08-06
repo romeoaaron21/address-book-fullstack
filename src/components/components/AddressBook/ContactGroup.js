@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
+import decode from 'jwt-decode';
 
 //components
 import AddGroup from '../Modal/AddGroup';
@@ -60,12 +61,13 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function ContactGroup() {
-    const user_id = localStorage.getItem('id');
+    const user_id = decode(localStorage.getItem('token')).userId;
     const [openGroup, setOpenGroup] = useState(false);
     const [openMembers, setOpenMembers] = useState(false);
     const [component, setComponent] = useState(true);
     const [groups, setGroups] = useState([]);
     const [groupId, setGroupId] = useState('')
+    const [searchVal, setSearchVal] = useState('')
     const classes = useStyles();
 
 if (component) {
@@ -87,6 +89,10 @@ if (component) {
     setComponent(true)
   }
 
+  let filteredSearch = Object.keys(groups).filter(function (obj) {
+    return groups[obj].name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
+  })
+
     return (
         <React.Fragment>
             <Grid item xs={12} style={{paddingBottom: '50px'}}>
@@ -97,7 +103,7 @@ if (component) {
                         <IconButton className={classes.searchButton} aria-label="search">
                             <SearchIcon />
                         </IconButton>
-                        <InputBase className={classes.searchInput} placeholder="Search Group Name"/>
+                        <InputBase className={classes.searchInput} onChange={e=>setSearchVal(e.target.value)} placeholder="Search Group Name"/>
                         <Fab size="small" className={classes.addIcon} aria-label="add" >
                             <AddIcon onClick={()=>setOpenGroup(true)}/>
                         </Fab>
@@ -106,8 +112,8 @@ if (component) {
 
                     <List component="nav">
                     {!component ?
-                    Object.keys(groups).map(i => (
-                        <React.Fragment>
+                    filteredSearch.map(i => (
+                        <React.Fragment key={groups[i].id}>
                     
                         <ListItem button onClick={()=>{
                                 setOpenMembers(true)

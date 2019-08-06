@@ -58,10 +58,8 @@ export default function SignIn() {
   // let token = localStorage.getItem('token');
 
   const [ token, setToken ] = useState('');
-  const [ id, setId ] = useState('');
   const [ user, setUser ] = useState('');
   localStorage.setItem('token', token);
-  localStorage.setItem('id', id);
   localStorage.setItem('user', user);
 
   const updateWarning = e => {
@@ -159,7 +157,6 @@ export default function SignIn() {
                 // }
               }).then(function(res) {
                 setToken(res.data.token)
-                setId(res.data.id)
                 setUser(res.data.username)
                 window.location.href = '#/addressBook'
               }).catch(() => {

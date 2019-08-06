@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import axios from 'axios';
-import clsx from 'clsx';
+import decode from 'jwt-decode';
 
 //material-ui core
 import Button from '@material-ui/core/Button';
@@ -14,7 +14,7 @@ import TextField from '@material-ui/core/TextField';
 
 //material-ui icons
 import Close from '@material-ui/icons/Close';
-import GroupAdd from '@material-ui/icons/GroupAdd';
+import GroupAdd from '@material-ui/icons/Group';
 
 
 import Input from '@material-ui/core/Input';
@@ -83,7 +83,7 @@ const MenuProps = {
 
 
 export default function AddMembers({ handleClose, openDialog, handleComponent, contactId }) {
-    const user_id = localStorage.getItem('id');
+    const user_id = decode(localStorage.getItem('token')).userId;
     const [component, setComponent] = useState(true);
     const [groups, setGroups] = useState([]);
     const [groupName, setGroupName] = useState([]);
@@ -106,14 +106,14 @@ export default function AddMembers({ handleClose, openDialog, handleComponent, c
             <Dialog open={openDialog} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'xs'} fullWidth={true}>
                 <DialogTitle className={classes.dialogTitle}>
                     <GroupAdd className={classes.icon} />
-                    <span style={{marginLeft: '40px'}}>Add New Group to Address Book</span> 
+                    <span style={{marginLeft: '40px'}}>Add Group To Selected Contact</span> 
                     <Close className={classes.closeIcon} onClick={handleClose}/>
                 </DialogTitle>
 
                 <DialogContent className={classes.dialogContent}>
 
                 <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="select-multiple-checkbox">Tag</InputLabel>
+                    <InputLabel htmlFor="select-multiple-checkbox">Select Contact Group/s</InputLabel>
                     <Select
                     multiple
                     style={{width:'40vh'}}

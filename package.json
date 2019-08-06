@@ -12,6 +12,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^2.2.0",
     "massive": "^5.11.2",
     "material-table": "^1.40.1",
     "node-pg-migrate": "^3.21.1",

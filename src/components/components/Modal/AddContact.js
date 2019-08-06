@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
+import decode from 'jwt-decode';
 
 //material-ui core
 import Button from '@material-ui/core/Button';
@@ -49,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function AddContact({ handleClose, openDialog, handleComponent }) {
-    const id = localStorage.getItem('id');
+    const user_id = decode(localStorage.getItem('token')).userId;
     const [state, setState] = useState({
         first_name: '',
         last_name: '',
@@ -61,7 +62,7 @@ export default function AddContact({ handleClose, openDialog, handleComponent })
         city: '',
         country: '',
         state: '',
-        user_id: id,
+        user_id: user_id,
     })
 
     const updateState = e => {
