@@ -160,6 +160,36 @@ function selectGroup(req, res){
 //   });
 // }
 
+function getAvailableContact(req, res){
+  const db = req.app.get('db')
+  const { group_id } = req.params;
+
+  db.query(`SELECT contacts.* FROM contacts WHERE id NOT IN(SELECT contact_id from group_members, groups WHERE groups.id = group_members.group_id AND groups.id = ${group_id})`)
+  .then(contacts => {
+      res.status(200).json([...contacts])
+  })
+  .catch(err => {
+    res.status(500).end()
+  });
+
+
+}
+
+function addAvailableContact(req, res) {
+  const db = req.app.get('db')
+  const { group_id } = req.params;
+  const contacts = req.body;
+
+  contacts.map(contact => {
+    db.group_members
+    .insert({
+      contact_id: contact,
+      group_id: group_id
+    })
+  })
+  res.status(201).json('Successfully Added!')
+}
+
 
 
 module.exports = {
@@ -170,6 +200,8 @@ module.exports = {
     getMembers,
     deleteMember,
     selectGroup,
+    getAvailableContact,
+    addAvailableContact,
 }
 
 

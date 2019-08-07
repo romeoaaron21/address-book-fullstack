@@ -3,6 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import decode from 'jwt-decode';
 
+//components
+import SelectAddMembers from './SelectAddMembers'
+
 //material-ui core
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -36,6 +39,12 @@ const useStyles = makeStyles(theme => ({
     action: {
         color: 'white',
     },
+    addMembers: {
+        cursor:'pointer',
+        marginLeft:'70vh',
+        position:'absolute',
+        textDecoration:'underline'
+    },
     cancel: {
         backgroundColor: '#ff5151', 
         color: 'white', 
@@ -57,6 +66,8 @@ const useStyles = makeStyles(theme => ({
     icon: {
         fontSize:'32px', 
         position:'absolute',
+        float:'right', 
+        cursor:'pointer',
     },
     noContact: {
       cursor:'pointer', 
@@ -76,9 +87,18 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
     const user_id = decode(localStorage.getItem('token')).userId;
     const [state, setState] = useState((''));
 
+    const [open, setOpen] = useState(false);
+
 
     const [component, setComponent] = useState(true);
     const [contacts, setContacts] = useState([]);
+
+    function handleCloseSelect() {
+      setOpen(false);
+    }
+    function handleComponentSelect() {
+      setComponent(true)
+    }
 
 
     if (component) {
@@ -99,14 +119,13 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
         <React.Fragment>
             <Dialog open={openDialog} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'lg'} fullWidth={true}>
                 <DialogTitle className={classes.dialogTitle}>
-                    <GroupAdd className={classes.icon} />
+                    <GroupAdd className={classes.icon} onClick={()=>{setOpen(true)}}/>
                     <span style={{marginLeft: '40px'}}>View List of Members</span> 
                     <Close className={classes.closeIcon} onClick={handleClose}/>
+                    <span className={classes.addMembers} onClick={()=>{setOpen(true)}}>Add Group Member/s</span> 
                 </DialogTitle>
 
                 <DialogContent className={classes.dialogContent}>
-
-
 
                 <Table className={classes.table}>
                <TableHead>
@@ -154,43 +173,20 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
                   :
                     <TableRow>
                       <TableCell style={{padding:'10vh', fontWeight:'bolder', fontSize:'1.5rem'}} colSpan={4} align="center">
-                        <span className={classes.noContact}><PersonAdd fontSize="large" style={{marginRight:'10px'}}/> No Member List</span>
+                        <span className={classes.noContact} onClick={()=>{setOpen(true)}}><PersonAdd fontSize="large" style={{marginRight:'10px'}}/> No Member List</span>
                       </TableCell>
                     </TableRow>
                 }
               </TableBody>
             </Table>
 
-
-
-            
-
-
-
-
-
-
-
                 </DialogContent>
 
-                
-                {/* <DialogActions>
-                    <Button onClick={handleClose} className={classes.cancel}>
-                        CANCEL
-                    </Button>
-                    <Button className={classes.submit} onClick={() => {
-                        axios(`http://localhost:3001/api/addGroup/${id}/${state}`, {
-                            method: 'post',
-                        }).then(function(res) {
-                            console.log(res)
-                            handleComponent();
-                            handleClose();
-                        })
-                    }}>
-                        ADD CONTACT
-                    </Button>
-                </DialogActions> */}
             </Dialog>
+
+
+
+            {open ? <SelectAddMembers openDialog={open} handleClose={handleCloseSelect} handleComponent={handleComponentSelect} groupId={groupId} /> : <React.Fragment></React.Fragment>}
         </React.Fragment>
     )
 }
