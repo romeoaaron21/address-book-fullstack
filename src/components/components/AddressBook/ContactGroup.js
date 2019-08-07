@@ -40,6 +40,8 @@ const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
         padding: '10px',
+        overflowX: 'auto',
+        width:'100%'
     },
     searchButton: {
         padding: 10,
@@ -60,7 +62,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function ContactGroup() {
+export default function ContactGroup({setToastify, setToastifyType}) {
     const user_id = decode(localStorage.getItem('token')).userId;
     const [openGroup, setOpenGroup] = useState(false);
     const [openMembers, setOpenMembers] = useState(false);
@@ -132,6 +134,8 @@ if (component) {
                                             method: 'delete',
                                           }).then(function (res) {
                                             setComponent(true)
+                                            setToastifyType('deleteGroup');
+                                            setToastify(true);
                                             // console.log(res)
                                           })
                                     }}/>
@@ -149,8 +153,8 @@ if (component) {
                 </Paper>
             </Grid>
 
-            {openGroup ? <AddGroup openDialog={openGroup} handleClose={handleCloseGroup} handleComponent={handleComponent} /> : <React.Fragment></React.Fragment>}
-            {openMembers? <ViewMembers openDialog={openMembers} groupId={groupId} handleClose={handleCloseMembers} handleComponent={handleComponent} /> : <React.Fragment></React.Fragment>}
+            {openGroup ? <AddGroup openDialog={openGroup} handleClose={handleCloseGroup} handleComponent={handleComponent} setToastify={setToastify} setToastifyType={setToastifyType} /> : <React.Fragment></React.Fragment>}
+            {openMembers? <ViewMembers openDialog={openMembers} groupId={groupId} handleClose={handleCloseMembers} handleComponent={handleComponent} setToastify={setToastify} setToastifyType={setToastifyType} /> : <React.Fragment></React.Fragment>}
 
         </React.Fragment>
         

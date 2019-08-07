@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-export default function EditContact({handleClose, openDialog, editId, handleComponent}) {
+export default function EditContact({handleClose, openDialog, editId, handleComponent, setToastify, setToastifyType}) {
     const id = decode(localStorage.getItem('token')).userId;
     const [ showId, setShowId ] = useState(true);
     const [ state, setState ] = useState({
@@ -95,6 +95,25 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
         setShowId(false);
       }
 
+    function editContacts(e){
+        e.preventDefault();
+            axios(`http://localhost:3001/api/editContact/${editId}`, {
+                        method: 'patch',
+                        data: state,
+                    }).then(function(res){
+                        console.log(res);
+                        handleComponent();
+                        handleClose();
+                        setToastifyType('editContact');
+                        setToastify(true);
+                        // window.location.reload();
+                        // window.location.href=window.location.href
+                        // setToken(res.data.token)
+                        // window.location.href = '#/addressBook';
+            })
+                    
+    } 
+
     const classes = useStyles();
     return (
         <React.Fragment>
@@ -104,6 +123,7 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
                     <span style={{marginLeft: '40px'}}>Add New Contact to Address Book</span> 
                     <Close className={classes.closeIcon} onClick={handleClose}/>
                 </DialogTitle>
+                <form onSubmit={e=>editContacts(e)}>
 
                 {!showId && state.first_name?
                 
@@ -112,7 +132,6 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
                     <TextField
                         style={{ width: '31%' }}
                         required
-                        autoFocus
                         margin="dense"
                         label="First Name"
                         type="text"
@@ -122,8 +141,8 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
                         defaultValue={state.first_name}
                     />
                     <TextField
+                        required
                         style={{ width: '31%' }}
-                        autoFocus
                         margin="dense"
                         label="Last Name"
                         type="text"
@@ -133,11 +152,11 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
                         defaultValue={state.last_name}
                     />
                     <TextField
+                        required
                         style={{ width: '34%' }}
-                        autoFocus
                         margin="dense"
                         label="Email Address"
-                        type="text"
+                        type="email"
                         variant="outlined"
                         name="email"
                         onChange={updateState}
@@ -147,8 +166,8 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
 
                 <DialogContent className={classes.dialogContent}>
                     <TextField
+                        required
                         style={{ width: '27%' }}
-                        autoFocus
                         margin="dense"
                         label="Home Phone"
                         type="text"
@@ -158,19 +177,19 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
                         defaultValue={state.home_phone}
                     />
                     <TextField
+                        required
                         style={{ width: '27%' }}
-                        autoFocus
                         margin="dense"
                         label="Mobile Phone"
-                        type="text"
+                        type="number"
                         variant="outlined"
                         name="mobile_phone"
                         onChange={updateState}
                         defaultValue={state.mobile_phone}
                     />
                     <TextField
+                        required
                         style={{ width: '27%' }}
-                        autoFocus
                         margin="dense"
                         label="Work Phone"
                         type="text"
@@ -180,11 +199,11 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
                         defaultValue={state.work_phone}
                     />
                     <TextField
+                        required
                         style={{ width: '15%' }}
-                        autoFocus
                         margin="dense"
                         label="Postal Code"
-                        type="text"
+                        type="number"
                         variant="outlined"
                         name="postal_code"
                         onChange={updateState}
@@ -196,7 +215,6 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
                     <TextField
                         style={{ width: '31%' }}
                         required
-                        autoFocus
                         margin="dense"
                         label="City"
                         type="text"
@@ -206,8 +224,8 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
                         defaultValue={state.city}
                     />
                     <TextField
+                        required
                         style={{ width: '31%' }}
-                        autoFocus
                         margin="dense"
                         label="State / Province"
                         type="text"
@@ -217,8 +235,8 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
                         defaultValue={state.state}
                     />
                     <TextField
+                        required
                         style={{ width: '34%' }}
-                        autoFocus
                         margin="dense"
                         label="Country"
                         type="text"
@@ -238,24 +256,11 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
                     <Button onClick={handleClose} className={classes.cancel}>
                         Cancel
           </Button>
-                    <Button className={classes.submit} onClick={() => {
-                        axios(`http://localhost:3001/api/editContact/${editId}`, {
-                                    method: 'patch',
-                                    data: state,
-                                }).then(function(res){
-                                    console.log(res);
-                                    handleComponent();
-                                    handleClose();
-                                    // window.location.reload();
-                                    // window.location.href=window.location.href
-                                    // setToken(res.data.token)
-                                    // window.location.href = '#/addressBook';
-                                })
-                                }
-                                }>
+                    <Button className={classes.submit} type="submit">
                         Edit Contact Information
           </Button>
                 </DialogActions>
+                </form>
             </Dialog>
         </React.Fragment>
     )

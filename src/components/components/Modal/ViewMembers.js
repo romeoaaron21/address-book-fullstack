@@ -66,7 +66,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function AddContact({ handleClose, openDialog, groupId }) {
+export default function AddContact({ handleClose, openDialog, groupId, setToastify, setToastifyType }) {
     const user_id = decode(localStorage.getItem('token')).userId;
     const [state, setState] = useState((''));
 
@@ -130,6 +130,8 @@ export default function AddContact({ handleClose, openDialog, groupId }) {
                                 method: 'delete',
                               }).then(function (res) {
                                 setComponent(true)
+                                setToastifyType('deleteMember');
+                                setToastify(true);
                                 // console.log(res)
                               })
                           }} />

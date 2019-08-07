@@ -59,12 +59,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-
-
-
-
-
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -76,13 +70,7 @@ const MenuProps = {
   },
 };
 
-
-
-
-
-
-
-export default function AddMembers({ handleClose, openDialog, handleComponent, contactId }) {
+export default function AddMembers({ handleClose, openDialog, handleComponent, contactId, setToastify, setToastifyType }) {
     const user_id = decode(localStorage.getItem('token')).userId;
     const [component, setComponent] = useState(true);
     const [groups, setGroups] = useState([]);
@@ -144,6 +132,8 @@ export default function AddMembers({ handleClose, openDialog, handleComponent, c
                         }).then(function(res) {
                             handleComponent();
                             handleClose();
+                            setToastifyType('addMember');
+                            setToastify(true)
                         })
                     }}
                     >

@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function AddContact({ handleClose, openDialog, handleComponent }) {
+export default function AddContact({ handleClose, openDialog, handleComponent, setToastify, setToastifyType }) {
     const user_id = decode(localStorage.getItem('token')).userId;
     const [state, setState] = useState({
         first_name: '',
@@ -81,10 +81,8 @@ export default function AddContact({ handleClose, openDialog, handleComponent })
                 console.log(res);
                 handleComponent();
                 handleClose();
-                // window.location.reload();
-                // window.location.href=window.location.href
-                // setToken(res.data.token)
-                // window.location.href = '#/addressBook';
+                setToastifyType('addContact');
+                setToastify(true);
             })
     }
 

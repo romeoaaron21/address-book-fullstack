@@ -49,9 +49,22 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function AddContact({ handleClose, openDialog, handleComponent }) {
+export default function AddContact({ handleClose, openDialog, handleComponent, setToastify, setToastifyType }) {
     const id = decode(localStorage.getItem('token')).userId;
     const [state, setState] = useState((''))
+
+    function addGroup(e){
+        e.preventDefault();
+            axios(`http://localhost:3001/api/addGroup/${id}/${state}`, {
+                method: 'post',
+            }).then(function(res) {
+                console.log(res)
+                handleComponent();
+                handleClose();
+                setToastifyType('addGroup');
+                setToastify(true);
+            })
+    }
 
     const classes = useStyles();
     return (
@@ -63,6 +76,7 @@ export default function AddContact({ handleClose, openDialog, handleComponent })
                     <Close className={classes.closeIcon} onClick={handleClose}/>
                 </DialogTitle>
 
+                <form onSubmit={e=>addGroup(e)}>
                 <DialogContent className={classes.dialogContent}>
                     <TextField
                         margin="dense"
@@ -81,18 +95,11 @@ export default function AddContact({ handleClose, openDialog, handleComponent })
                     <Button onClick={handleClose} className={classes.cancel}>
                         CANCEL
                     </Button>
-                    <Button className={classes.submit} onClick={() => {
-                        axios(`http://localhost:3001/api/addGroup/${id}/${state}`, {
-                            method: 'post',
-                        }).then(function(res) {
-                            console.log(res)
-                            handleComponent();
-                            handleClose();
-                        })
-                    }}>
+                    <Button className={classes.submit} type="submit">
                         ADD GROUP
                     </Button>
                 </DialogActions>
+                </form>
             </Dialog>
         </React.Fragment>
     )

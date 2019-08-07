@@ -10,6 +10,7 @@ import ContactGroup from './components/AddressBook/ContactGroup';
 import EditContact from './components/Modal/EditContact';
 import Loader from './components/Loader/Loader';
 import NavHeader from './components/AddressBook/NavHeader';
+import Toastify from './components/CommonComponents/Toastify'
 
 //material-ui components
 import AppBar from '@material-ui/core/AppBar';
@@ -77,6 +78,8 @@ const useStyles = makeStyles(theme => ({
   },
   root: {
     flexGrow: 1,
+    overflowX: 'auto',
+    width:'100%'
   },
   searchButton: {
     padding: 10,
@@ -85,6 +88,7 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
   },
   table: {
+    minWidth: 700,
   },
   tableTitle: {
     fontWeight:600, 
@@ -113,7 +117,6 @@ const rows = [
   createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
 ];
 
-
 export default function AddressBook() {
   
    if (localStorage.getItem('token') === null || localStorage.getItem('token').length === 0) {
@@ -133,6 +136,9 @@ export default function AddressBook() {
   const [contacts, setContacts] = useState([]);
   const [sortBut, setSortBut] = useState(false);
   const [sortButF, setSortButF] = useState(false);
+
+  const [toastify, setToastify] = useState(false);
+  const [toastifyType, setToastifyType] = useState('');
 
  
 
@@ -176,7 +182,7 @@ export default function AddressBook() {
       {!component?
         
         <Grid container spacing={0} style={{ padding: '50px' }}>
-          <ContactGroup />
+          <ContactGroup setToastify={setToastify} setToastifyType={setToastifyType}/>
           <Grid item xs={12}>
             <Paper className={classes.root}>
               <Typography className={classes.title} >
@@ -245,9 +251,7 @@ export default function AddressBook() {
                           <Fab size="small" onClick={function () {
                             setOpenEdit(true)
                             setContactId(contacts[i].contact_id)
-                          }
-                          }
-                            style={{ backgroundColor: '#874aff' }} className={classes.action}>
+                          }} style={{ backgroundColor: '#874aff' }} className={classes.action}>
                             <EditIcon />
                           </Fab>
 
@@ -256,9 +260,8 @@ export default function AddressBook() {
                               method: 'delete',
                             }).then(function (res) {
                               setComponent(true);
-                              toast.error(`Successfully deleted!`, {
-                                position: toast.POSITION.TOP_RIGHT
-                              });
+                              setToastifyType('deleteContact');
+                              setToastify(true);
                             })
                           }} style={{ backgroundColor: '#f50057', margin: '0 10px' }} className={classes.action}>
                             <DeleteIcon />
@@ -267,13 +270,9 @@ export default function AddressBook() {
                           <Fab size="small" onClick={function () {
                             setOpenMembers(true)
                             setContactId(contacts[i].contact_id)
-                          }
-                          }
-                            style={{ backgroundColor: '#07bc0c' }} className={classes.action}>
+                          }} style={{ backgroundColor: '#07bc0c' }} className={classes.action}>
                             <GroupAddIcon />
                           </Fab>
-
-
                         </TableCell>
                       </TableRow>
                     ))
@@ -291,11 +290,10 @@ export default function AddressBook() {
         </React.Fragment>
       }
 
-      {open ? <AddContact openDialog={open} handleClose={handleClose} handleComponent={handleComponent} /> : <React.Fragment></React.Fragment>}
-      {openEdit ? <EditContact openDialog={openEdit} editId={contactId} handleClose={handleCloseEdit} handleComponent={handleComponent} /> : <React.Fragment></React.Fragment>}
-      {openMembers ? <AddMembers openDialog={openMembers} handleClose={handleCloseMembers} handleComponent={handleComponent} contactId={contactId} /> : <React.Fragment></React.Fragment>}
-
-
+      {toastify? <Toastify setToastify={setToastify} toastifyType={toastifyType}/>:<React.Fragment></React.Fragment>}
+      {open ? <AddContact openDialog={open} handleClose={handleClose} handleComponent={handleComponent} setToastify={setToastify} setToastifyType={setToastifyType} /> : <React.Fragment></React.Fragment>}
+      {openEdit ? <EditContact openDialog={openEdit} editId={contactId} handleClose={handleCloseEdit} handleComponent={handleComponent} setToastify={setToastify} setToastifyType={setToastifyType} /> : <React.Fragment></React.Fragment>}
+      {openMembers ? <AddMembers openDialog={openMembers} handleClose={handleCloseMembers} handleComponent={handleComponent} contactId={contactId} setToastify={setToastify} setToastifyType={setToastifyType}/> : <React.Fragment></React.Fragment>}
     </React.Fragment>
   );
 }

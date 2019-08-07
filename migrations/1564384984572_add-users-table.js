@@ -5,7 +5,8 @@ exports.up = pgm => {
       id: {
         type: 'serial',
         primaryKey: true,
-      },first_name: {
+      },
+      first_name: {
         type: 'text',
         notNull: true,
       },

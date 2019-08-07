@@ -14,6 +14,7 @@ import LogoutIcon from '@material-ui/icons/ExitToApp';
 const useStyles = makeStyles(theme => ({
     bar: {
       backgroundImage: 'linear-gradient(to right, #b3008c, #bb029c, #c309ad, #c914be, #ce1ed1, #d124d8, #d52adf, #d82fe6, #dc32e2, #e035df, #e438db, #e73cd8)',
+      width:'100%'
     },
     icon: {
       color: 'white',
