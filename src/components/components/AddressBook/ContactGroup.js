@@ -26,6 +26,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import GroupIcon from '@material-ui/icons/Group';
 import IconButton from '@material-ui/core/IconButton';
+import GroupAdd from '@material-ui/icons/GroupAdd';
 import SearchIcon from '@material-ui/icons/Search';
 
 
@@ -37,9 +38,16 @@ const useStyles = makeStyles(theme => ({
     icon: {
         backgroundColor: '#3498db',
     },
+    noGroup: {
+        display:'inline-flex', 
+        alignItems:'center',
+        fontWeight:'bolder', 
+        fontSize:'1.5rem',
+        cursor:'pointer', 
+        textDecoration:'underline', 
+    },
     root: {
         flexGrow: 1,
-        padding: '10px',
         overflowX: 'auto',
         width:'100%'
     },
@@ -57,7 +65,7 @@ const useStyles = makeStyles(theme => ({
     },
     titleText: {
         paddingRight:'20px', 
-        fontWeight:600,
+        fontWeight:800,
     }    
 }));
 
@@ -113,7 +121,7 @@ if (component) {
                     <Divider />
 
                     <List component="nav">
-                    {!component ?
+                    {!component && groups[0]?
                     filteredSearch.map(i => (
                         <React.Fragment key={groups[i].id}>
                     
@@ -147,7 +155,15 @@ if (component) {
                         </React.Fragment>
                     ))
                     :
-                    null
+                    <React.Fragment>
+                            <ListItem>
+                                <ListItemText style={{display:'flex', justifyContent:'center', padding:'5vh'}}>
+                                    <span className={classes.noGroup} onClick={()=>setOpenGroup(true)}>
+                                        <GroupAdd fontSize="large" style={{marginRight:'10px'}}/>No Contact Group
+                                    </span>
+                                </ListItemText>
+                            </ListItem>
+                    </React.Fragment>       
                     }
                     </List>
                 </Paper>

@@ -47,7 +47,7 @@ import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Visibility';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import GroupIcon from '@material-ui/icons/Group';
+import PersonAdd from '@material-ui/icons/PersonAdd';
 import LogoutIcon from '@material-ui/icons/ExitToApp';
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -75,6 +75,12 @@ const useStyles = makeStyles(theme => ({
   menuButton: {
     marginRight: theme.spacing(2),
     color: 'white',
+  },
+  noContact: {
+    cursor:'pointer', 
+    textDecoration:'underline', 
+    display:'inline-flex', 
+    alignItems:'center',
   },
   root: {
     flexGrow: 1,
@@ -140,14 +146,12 @@ export default function AddressBook() {
   const [toastify, setToastify] = useState(false);
   const [toastifyType, setToastifyType] = useState('');
 
- 
-
   if (component) {
     axios(`http://localhost:3001/api/getContact/${user_id}`, {
       method: 'get',
-      // headers: {
-      //   'Authorization': `Bearer ${localStorage.getItem('token')}`
-      // }
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     }).then(function (res) {
       setContacts(res.data)
     })
@@ -181,7 +185,7 @@ export default function AddressBook() {
       <NavHeader user={user} />
       {!component?
         
-        <Grid container spacing={0} style={{ padding: '50px' }}>
+        <Grid container style={{ padding: '50px' }}>
           <ContactGroup setToastify={setToastify} setToastifyType={setToastifyType}/>
           <Grid item xs={12}>
             <Paper className={classes.root}>
@@ -267,7 +271,7 @@ export default function AddressBook() {
                             <DeleteIcon />
                           </Fab>
 
-                          <Fab size="small" onClick={function () {
+                          <Fab size="small" onClick={() => {
                             setOpenMembers(true)
                             setContactId(contacts[i].contact_id)
                           }} style={{ backgroundColor: '#07bc0c' }} className={classes.action}>
@@ -277,7 +281,12 @@ export default function AddressBook() {
                       </TableRow>
                     ))
                     :
-                    null
+                    <TableRow>
+                      <TableCell style={{padding:'15vh', fontWeight:'bolder', fontSize:'1.5rem'}} colSpan={4} align="center">
+                        <span onClick={() => setOpen(true)} className={classes.noContact}><PersonAdd fontSize="large" style={{marginRight:'10px'}}/> No Contact List</span>
+                      </TableCell>
+                    </TableRow>
+                    
                   }
                 </TableBody>
               </Table>
