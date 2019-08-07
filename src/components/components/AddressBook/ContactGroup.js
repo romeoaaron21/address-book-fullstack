@@ -145,6 +145,9 @@ if (component) {
                                             setToastifyType('deleteGroup');
                                             setToastify(true);
                                             // console.log(res)
+                                          }).catch(()=>{
+                                            setToastifyType('deleteGroupError');
+                                            setToastify(true);
                                           })
                                     }}/>
                                 </IconButton>

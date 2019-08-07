@@ -94,7 +94,7 @@ export default function AddMembers({ handleClose, openDialog, handleComponent, c
             <Dialog open={openDialog} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'xs'} fullWidth={true}>
                 <DialogTitle className={classes.dialogTitle}>
                     <GroupAdd className={classes.icon} />
-                    <span style={{marginLeft: '40px'}}>Add Group To Selected Contact</span> 
+                    <span style={{marginLeft: '40px'}}>Add Contact to Selected Group</span> 
                     <Close className={classes.closeIcon} onClick={handleClose}/>
                 </DialogTitle>
 
@@ -133,6 +133,9 @@ export default function AddMembers({ handleClose, openDialog, handleComponent, c
                             handleComponent();
                             handleClose();
                             setToastifyType('addMember');
+                            setToastify(true)
+                        }).catch(() => {
+                            setToastifyType('addMemberError');
                             setToastify(true)
                         })
                     }}

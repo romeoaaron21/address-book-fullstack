@@ -63,6 +63,9 @@ export default function AddContact({ handleClose, openDialog, handleComponent, s
                 handleClose();
                 setToastifyType('addGroup');
                 setToastify(true);
+            }).catch(() => {
+                setToastifyType('addGroupError');
+                setToastify(true);
             })
     }
 

@@ -9,6 +9,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import PersonAdd from '@material-ui/icons/PersonAdd';
 import TextField from '@material-ui/core/TextField';
 
 
@@ -57,6 +58,11 @@ const useStyles = makeStyles(theme => ({
         fontSize:'32px', 
         position:'absolute',
     },
+    noContact: {
+      cursor:'pointer', 
+      display:'inline-flex', 
+      alignItems:'center',
+    },
     submit: {
         backgroundColor: '#833ab4', 
         color: 'white', 
@@ -79,11 +85,11 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
         axios(`http://localhost:3001/api/getMembers/${groupId}`, {
           method: 'get',
         }).then(function (res) {
-        console.log(res)
-          setContacts(res.data)
+          setState(res.data.length);
+          setContacts(res.data);
         })
         setComponent(false);
-      }
+    }
 
 
 
@@ -94,7 +100,7 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
             <Dialog open={openDialog} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'lg'} fullWidth={true}>
                 <DialogTitle className={classes.dialogTitle}>
                     <GroupAdd className={classes.icon} />
-                    <span style={{marginLeft: '40px'}}>View List of Group Members</span> 
+                    <span style={{marginLeft: '40px'}}>View List of Members</span> 
                     <Close className={classes.closeIcon} onClick={handleClose}/>
                 </DialogTitle>
 
@@ -112,7 +118,7 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
                 </TableRow>
               </TableHead>
               <TableBody>
-                {!component?
+                {!component && state!==0?
 
                   contacts.map(contact => (
                     <TableRow key={contact.id}>
@@ -133,6 +139,9 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
                                 setToastifyType('deleteMember');
                                 setToastify(true);
                                 // console.log(res)
+                              }).catch(() => {
+                                setToastifyType('deleteMemberError');
+                                setToastify(true);
                               })
                           }} />
                         </Fab>
@@ -143,7 +152,11 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
                     </TableRow>
                   ))
                   :
-                  null
+                    <TableRow>
+                      <TableCell style={{padding:'10vh', fontWeight:'bolder', fontSize:'1.5rem'}} colSpan={4} align="center">
+                        <span className={classes.noContact}><PersonAdd fontSize="large" style={{marginRight:'10px'}}/> No Member List</span>
+                      </TableCell>
+                    </TableRow>
                 }
               </TableBody>
             </Table>

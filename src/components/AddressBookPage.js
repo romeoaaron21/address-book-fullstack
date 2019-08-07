@@ -183,7 +183,7 @@ export default function AddressBook() {
     <React.Fragment>
       <ToastContainer enableMultiContainer/>
       <NavHeader user={user} />
-      {!component?
+      {!component && filteredSearch?
         
         <Grid container style={{ padding: '50px' }}>
           <ContactGroup setToastify={setToastify} setToastifyType={setToastifyType}/>
@@ -241,7 +241,7 @@ export default function AddressBook() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {!component && contacts[0] ?
+                  {!component && filteredSearch[0] ?
 
                     filteredSearch.map(i => (
                       <TableRow key={contacts[i].contact_id}>
@@ -265,6 +265,9 @@ export default function AddressBook() {
                             }).then(function (res) {
                               setComponent(true);
                               setToastifyType('deleteContact');
+                              setToastify(true);
+                            }).catch(() => {
+                              setToastifyType('deleteContactError');
                               setToastify(true);
                             })
                           }} style={{ backgroundColor: '#f50057', margin: '0 10px' }} className={classes.action}>
