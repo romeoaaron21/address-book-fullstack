@@ -9,23 +9,29 @@ import SelectAddMembers from './SelectAddMembers'
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Fab from '@material-ui/core/Fab';
+import IconButton from '@material-ui/core/IconButton';
+import InputBase from '@material-ui/core/InputBase';
 import PersonAdd from '@material-ui/icons/PersonAdd';
-
-
-//material-ui icons
-import Close from '@material-ui/icons/Close';
-import GroupAdd from '@material-ui/icons/GroupAdd';
-
-
-
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Fab from '@material-ui/core/Fab';
+
+
+
+//material-ui icons
+import Close from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
+import GroupAdd from '@material-ui/icons/GroupAdd';
+import SearchIcon from '@material-ui/icons/Search';
+
+
+
+
+
+
 
 
 
@@ -68,6 +74,14 @@ const useStyles = makeStyles(theme => ({
       display:'inline-flex', 
       alignItems:'center',
     },
+    searchButton: {
+      padding: 10,
+      color:'white'
+    },
+    searchInput: {
+      width:'30vh',
+      color:'white'
+    },
     submit: {
         backgroundColor: '#833ab4', 
         color: 'white', 
@@ -85,6 +99,8 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
 
     const [component, setComponent] = useState(true);
     const [contacts, setContacts] = useState([]);
+
+    const [searchVal, setSearchVal] = useState('');
 
     function handleCloseSelect() {
       setOpen(false);
@@ -104,7 +120,11 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
         setComponent(false);
     }
 
-
+    let filteredSearch = contacts.filter(res => {
+      let fname = res.first_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
+      let lname = res.last_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
+      if (fname) { return fname } else { return lname }
+    })
 
 
     const classes = useStyles();
@@ -115,6 +135,18 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
                     <GroupAdd className={classes.icon} onClick={()=>{setOpen(true)}}/>
                     <span className={classes.addMembers} onClick={()=>{setOpen(true)}}>View List of Members (Click to Add)</span> 
                     <Close className={classes.closeIcon} onClick={handleClose}/>
+
+                    <div style={{float:'right'}}>
+                    <IconButton className={classes.searchButton} aria-label="search">
+                      <SearchIcon />
+                    </IconButton>
+                
+                    <InputBase className={classes.searchInput} placeholder="Search Contact List" 
+                     onChange={e => setSearchVal(e.target.value)} />
+                     </div>
+
+
+
                 </DialogTitle>
 
                 <DialogContent className={classes.dialogContent}>
@@ -131,7 +163,7 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
               <TableBody>
                 {!component && state!==0?
 
-                  contacts.map(contact => (
+                  filteredSearch.map(contact => (
                     <TableRow key={contact.id}>
                       <TableCell component="th" scope="row">
                         {contact.first_name}

@@ -43,6 +43,11 @@ export default function Toastify({setToastify, toastifyType}){
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :
+                toastifyType === 'editGroupName'?
+                toast.success(`Successfully updated group name!`, {
+                    position: toast.POSITION.TOP_RIGHT
+                })
+                :
 
                 
                 toastifyType === 'addContactError'?
@@ -76,7 +81,12 @@ export default function Toastify({setToastify, toastifyType}){
                 })
                 :
                 toastifyType === 'deleteContactError'?
-                toast.error(`Successfully deleted contact!`, {
+                toast.error(`Failed to delete contact!`, {
+                    position: toast.POSITION.TOP_RIGHT
+                })
+                :
+                toastifyType === 'editGroupNameError'?
+                toast.error(`Failed to update group name!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :

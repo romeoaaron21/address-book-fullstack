@@ -311,7 +311,7 @@ export default function AddressBook() {
                     ))
                     :
                     <TableRow>
-                      <TableCell style={{padding:'15vh', fontWeight:'bolder', fontSize:'1.5rem'}} colSpan={4} align="center">
+                      <TableCell style={{padding:'15vh', fontWeight:'bolder', fontSize:'1.5rem'}} colSpan={5} align="center">
                         <span onClick={() => setOpen(true)} className={classes.noContact}><PersonAdd fontSize="large" style={{marginRight:'10px'}}/> No Contact List</span>
                       </TableCell>
                     </TableRow>

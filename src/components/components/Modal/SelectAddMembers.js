@@ -84,7 +84,7 @@ export default function SelectAddMembers({ handleClose, openDialog, handleCompon
             <Dialog open={openDialog} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'xs'} fullWidth={true}>
                 <DialogTitle className={classes.dialogTitle}>
                     <GroupAdd className={classes.icon} />
-                    <span style={{marginLeft: '40px'}}>Add Contact to Selected Group</span> 
+                    <span style={{marginLeft: '40px'}}>Add Contacts to Selected Group</span> 
                     <Close className={classes.closeIcon} onClick={handleClose}/>
                 </DialogTitle>
 

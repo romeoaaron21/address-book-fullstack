@@ -9,6 +9,8 @@ import ViewMembers from '../Modal/ViewMembers';
 
 //material-ui components
 import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import DialogActions from '@material-ui/core/DialogActions';
 import Divider from '@material-ui/core/Divider';
 import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
@@ -19,6 +21,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 
 //material-ui icons
@@ -36,8 +39,20 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: '#833ab4', 
         color: 'white',
     },
+    cancel: {
+        backgroundColor: '#ff5151', 
+        color: 'white', 
+        margin: '15px 0', 
+        padding: '7px 30px'
+    },
     icon: {
         backgroundColor: '#3498db',
+    },
+    groupNameEdit: {
+        display:'inline-flex', 
+        alignItems:'center', 
+        padding:'0 20px 0 16px', 
+        boxSizing:'border-box',
     },
     noGroup: {
         display:'inline-flex', 
@@ -58,6 +73,12 @@ const useStyles = makeStyles(theme => ({
     searchInput: {
         flex: 1,
     },
+    submit: {
+        backgroundColor: '#833ab4', 
+        color: 'white', 
+        margin: '15px', 
+        padding: '7px 30px',
+    },
     title: {
         padding: '10px', 
         letterSpacing: '3px',
@@ -77,8 +98,11 @@ export default function ContactGroup({setToastify, setToastifyType}) {
     const [openMembers, setOpenMembers] = useState(false);
     const [component, setComponent] = useState(true);
     const [groups, setGroups] = useState([]);
-    const [groupId, setGroupId] = useState('')
-    const [searchVal, setSearchVal] = useState('')
+    const [groupId, setGroupId] = useState('');
+    const [searchVal, setSearchVal] = useState('');
+    const [editId, setEditId] = useState('');
+    const [editName, setEditName] = useState(false);
+    const [groupName, setGroupName] = useState('');
     const classes = useStyles();
 
 if (component) {
@@ -98,6 +122,23 @@ if (component) {
   }
   function handleComponent() {
     setComponent(true)
+  }
+
+  function changeGroupName(e){
+      e.preventDefault();
+
+      axios(`http://localhost:3001/api/editGroupName/${editId}/${groupName}`, {
+        method: 'patch',
+        }).then(function(res){
+            setComponent(true)
+            setEditName(false)
+            setToastifyType('editGroupName');
+            setToastify(true);
+        })
+        .catch(() => {
+            setToastifyType('editGroupNameError');
+            setToastify(true);
+        })
   }
 
   let filteredSearch = Object.keys(groups).filter(function (obj) {
@@ -131,44 +172,94 @@ if (component) {
                     filteredSearch.map(i => (
                         <React.Fragment key={groups[i].id}>
                     
-                        <ListItem button onClick={()=>{
-                                setOpenMembers(true)
-                                setGroupId(groups[i].id)}
-                        }>
-                            <ListItemAvatar>
-                                <Avatar className={classes.icon}>
-                                    <GroupIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary={groups[i].name} />
-                            <ListItemSecondaryAction>
-                                <IconButton edge="end" aria-label="edit" onClick={()=>{console.log(groups[i].id)}}>
-                                    <Tooltip title="Edit Group Name" placement="top">
-                                        <Edit />
-                                    </Tooltip>
-                                </IconButton>
+                       
+                            {editName && editId === groups[i].id?
+                            <Grid container className={classes.groupNameEdit}>
+                                <ListItemAvatar>
+                                    <Avatar className={classes.icon}>
+                                        <GroupIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
 
-                                <IconButton edge="end" aria-label="delete" onClick={()=>{
-                                        axios(`http://localhost:3001/api/deleteGroup/${groups[i].id}`, {
-                                            method: 'delete',
-                                          }).then(function (res) {
-                                            setComponent(true)
-                                            setToastifyType('deleteGroup');
-                                            setToastify(true);
-                                            // console.log(res)
-                                          }).catch(()=>{
-                                            setToastifyType('deleteGroupError');
-                                            setToastify(true);
-                                          })
+                                <Grid item xs={12} sm={9}>
+                                    <TextField
+                                        defaultValue={groups[i].name}
+                                        fullWidth
+                                        id="outlined-name"
+                                        label="Group Name"
+                                        margin="dense"
+                                        variant="outlined"
+                                        onClick={e=>{e.stopPropagation()}}
+                                        onChange={(e)=>{setGroupName(e.target.value)}}
+                                    />
+                                </Grid>
+
+                                <DialogActions>
+                                    <Button className={classes.cancel} onClick={()=>{
+                                        setGroupName('')
+                                        setEditName(false)
                                     }}>
-                                    <Tooltip title="Delete Group" placement="top">
-                                        <DeleteIcon />
-                                    </Tooltip>
-                                </IconButton>
+                                        Cancel
+                                    </Button>
+                                    <Button className={classes.submit} onClick={(e)=>{changeGroupName(e)}}>
+                                        Edit Group Name
+                                    </Button>
+                                </DialogActions>
+
+                            </Grid>
+
+                            :
+                            <React.Fragment>
+                                 <ListItem button onClick={(e)=>{
+                                    setOpenMembers(true)
+                                    setGroupId(groups[i].id)}
+                                    }>
+                                    <ListItemAvatar>
+                                        <Avatar className={classes.icon}>
+                                            <GroupIcon />
+                                        </Avatar>
+                                    </ListItemAvatar>
+
+                                <ListItemText primary={groups[i].name} />
+                                <ListItemSecondaryAction>
+                                    <IconButton edge="end" aria-label="edit" onClick={(e)=>{
+                                        e.stopPropagation();
+                                        setGroupName(groups[i].name)
+                                        setEditId(groups[i].id)
+                                        setEditName(true)}}
+                                    >
+                                        <Tooltip title="Edit Group Name" placement="top">
+                                            <Edit />
+                                        </Tooltip>
+                                    </IconButton>
+
+                                    <IconButton edge="end" aria-label="delete" onClick={()=>{
+                                            axios(`http://localhost:3001/api/deleteGroup/${groups[i].id}`, {
+                                                method: 'delete',
+                                            }).then(function (res) {
+                                                setComponent(true)
+                                                setToastifyType('deleteGroup');
+                                                setToastify(true);
+                                            }).catch(()=>{
+                                                setToastifyType('deleteGroupError');
+                                                setToastify(true);
+                                            })
+                                        }}>
+                                        <Tooltip title="Delete Group" placement="top">
+                                            <DeleteIcon />
+                                        </Tooltip>
+                                    </IconButton>
+                                </ListItemSecondaryAction>
+                                </ListItem>
+                                <Divider />
                                 
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                        <Divider />
+                            </React.Fragment>
+                            }
+
+
+
+                            
+                        
 
                         </React.Fragment>
                     ))

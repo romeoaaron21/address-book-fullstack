@@ -190,6 +190,20 @@ function addAvailableContact(req, res) {
   res.status(201).json('Successfully Added!')
 }
 
+function editGroupName(req, res){
+  const db = req.app.get('db');
+  const { group_id, group_name } = req.params;
+
+  db.groups
+    .update({id:group_id}, {name:group_name})
+    .then(group => res.status(200).json(group))
+    .catch(err => {
+        console.error(err);
+        res.status(500).end()
+  })
+
+}
+
 
 
 module.exports = {
@@ -202,6 +216,7 @@ module.exports = {
     selectGroup,
     getAvailableContact,
     addAvailableContact,
+    editGroupName,
 }
 
 
