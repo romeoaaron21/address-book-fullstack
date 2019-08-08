@@ -19,10 +19,12 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
+import Tooltip from '@material-ui/core/Tooltip';
 
 //material-ui icons
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
+import Edit from '@material-ui/icons/Edit';
 import GroupIcon from '@material-ui/icons/Group';
 import IconButton from '@material-ui/core/IconButton';
 import GroupAdd from '@material-ui/icons/GroupAdd';
@@ -117,7 +119,9 @@ if (component) {
 
                         
                         <Fab size="small" className={classes.addIcon} aria-label="add" >
-                            <AddIcon onClick={()=>setOpenGroup(true)}/>
+                            <Tooltip title="Add New Contact Group" placement="top">
+                                <AddIcon onClick={()=>setOpenGroup(true)}/>
+                            </Tooltip>
                         </Fab>
                     </Paper>
                     <Divider />
@@ -138,6 +142,12 @@ if (component) {
                             </ListItemAvatar>
                             <ListItemText primary={groups[i].name} />
                             <ListItemSecondaryAction>
+                                <IconButton edge="end" aria-label="edit" onClick={()=>{console.log(groups[i].id)}}>
+                                    <Tooltip title="Edit Group Name" placement="top">
+                                        <Edit />
+                                    </Tooltip>
+                                </IconButton>
+
                                 <IconButton edge="end" aria-label="delete" onClick={()=>{
                                         axios(`http://localhost:3001/api/deleteGroup/${groups[i].id}`, {
                                             method: 'delete',
@@ -151,8 +161,11 @@ if (component) {
                                             setToastify(true);
                                           })
                                     }}>
-                                    <DeleteIcon />
+                                    <Tooltip title="Delete Group" placement="top">
+                                        <DeleteIcon />
+                                    </Tooltip>
                                 </IconButton>
+                                
                             </ListItemSecondaryAction>
                         </ListItem>
                         <Divider />

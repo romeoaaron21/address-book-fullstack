@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import decode from 'jwt-decode';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 //components
 import AddContact from './components/Modal/AddContact';
@@ -13,19 +16,20 @@ import NavHeader from './components/AddressBook/NavHeader';
 import Toastify from './components/CommonComponents/Toastify'
 
 //material-ui components
+import Fab from '@material-ui/core/Fab';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
 import InputBase from '@material-ui/core/InputBase';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Fab from '@material-ui/core/Fab';
 
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 
 //material-ui icons
 import AddIcon from '@material-ui/icons/Add';
@@ -36,7 +40,6 @@ import EditIcon from '@material-ui/icons/Visibility';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import SearchIcon from '@material-ui/icons/Search';
-
 
 
 
@@ -134,6 +137,9 @@ export default function AddressBook() {
   const [toastify, setToastify] = useState(false);
   const [toastifyType, setToastifyType] = useState('');
 
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [page, setPage] = useState(0);
+
   if (component) {
     axios(`http://localhost:3001/api/getContact/${user_id}`, {
       method: 'get',
@@ -142,6 +148,13 @@ export default function AddressBook() {
       }
     }).then(function (res) {
       setContacts(res.data)
+    }).catch(()=>{
+      axios(`http://localhost:3001/api/getContact/${user_id}`, {
+      method: 'get',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
     })
     setComponent(false);
   }
@@ -164,6 +177,18 @@ export default function AddressBook() {
     let lname = contacts[obj].last_name.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
     if (fname) { return fname } else { return lname }
   })
+
+
+  function handleChangePage(event, newPage) {
+    setPage(newPage);
+  }
+
+  function handleChangeRowsPerPage(event) {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  }
+
+
 
   const classes = useStyles();
   return (
@@ -189,7 +214,9 @@ export default function AddressBook() {
 
                 <span className={classes.addContactButon}>
                   <Fab size="medium" style={{ backgroundColor: '#833ab4' }} aria-label="add">
+                  <Tooltip title="Add New Contact Information" placement="top">
                     <AddIcon className={classes.addIcon} onClick={() => setOpen(true)} />
+                  </Tooltip>
                   </Fab>
                 </span>
               </Paper>
@@ -249,7 +276,9 @@ export default function AddressBook() {
                             setOpenEdit(true)
                             setContactId(contacts[i].contact_id)
                           }} style={{ backgroundColor: '#874aff' }} className={classes.action}>
+                            <Tooltip title="Edit Contact List" placement="top">
                             <EditIcon />
+                            </Tooltip>
                           </Fab>
 
                           <Fab size="small" onClick={() => {
@@ -264,14 +293,18 @@ export default function AddressBook() {
                               setToastify(true);
                             })
                           }} style={{ backgroundColor: '#f50057', margin: '0 10px' }} className={classes.action}>
+                            <Tooltip title="Delete Contact List" placement="top">
                             <DeleteIcon />
+                            </Tooltip>
                           </Fab>
 
                           <Fab size="small" onClick={() => {
                             setOpenMembers(true)
                             setContactId(contacts[i].contact_id)
                           }} style={{ backgroundColor: '#07bc0c' }} className={classes.action}>
+                            <Tooltip title="Add to Contact Group" placement="top">
                             <GroupAddIcon />
+                            </Tooltip>
                           </Fab>
                         </TableCell>
                       </TableRow>
@@ -286,6 +319,21 @@ export default function AddressBook() {
                   }
                 </TableBody>
               </Table>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={filteredSearch.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                backIconButtonProps={{
+                  'aria-label': 'previous page',
+                }}
+                nextIconButtonProps={{
+                  'aria-label': 'next page',
+                }}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+              />
             </Paper>
           </Grid>
         </Grid>
