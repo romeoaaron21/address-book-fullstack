@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import decode from 'jwt-decode';
 
 //material-ui core
 import Button from '@material-ui/core/Button';
@@ -9,7 +8,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import TextField from '@material-ui/core/TextField';
 
 
 //material-ui icons
@@ -17,15 +15,10 @@ import Close from '@material-ui/icons/Close';
 import GroupAdd from '@material-ui/icons/Group';
 
 
-import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
-import Chip from '@material-ui/core/Chip';
-
 
 
 const useStyles = makeStyles(theme => ({
@@ -70,7 +63,6 @@ const MenuProps = {
   },
 };
 export default function SelectAddMembers({ handleClose, openDialog, handleComponent, groupId }) {
-    const user_id = decode(localStorage.getItem('token')).userId;
     const [component, setComponent] = useState(true);
     const [contacts, setContacts] = useState([]);
     const [contactName, setContactName] = useState([]);

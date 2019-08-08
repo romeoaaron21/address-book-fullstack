@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import decode from 'jwt-decode';
 
 //components
 import SelectAddMembers from './SelectAddMembers'
 
 //material-ui core
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import PersonAdd from '@material-ui/icons/PersonAdd';
-import TextField from '@material-ui/core/TextField';
 
 
 //material-ui icons
@@ -41,9 +37,7 @@ const useStyles = makeStyles(theme => ({
     },
     addMembers: {
         cursor:'pointer',
-        marginLeft:'70vh',
-        position:'absolute',
-        textDecoration:'underline'
+        marginLeft: '40px',
     },
     cancel: {
         backgroundColor: '#ff5151', 
@@ -84,7 +78,6 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function AddContact({ handleClose, openDialog, groupId, setToastify, setToastifyType }) {
-    const user_id = decode(localStorage.getItem('token')).userId;
     const [state, setState] = useState((''));
 
     const [open, setOpen] = useState(false);
@@ -120,9 +113,8 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
             <Dialog open={openDialog} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'lg'} fullWidth={true}>
                 <DialogTitle className={classes.dialogTitle}>
                     <GroupAdd className={classes.icon} onClick={()=>{setOpen(true)}}/>
-                    <span style={{marginLeft: '40px'}}>View List of Members</span> 
+                    <span className={classes.addMembers} onClick={()=>{setOpen(true)}}>View List of Members (Click to Add)</span> 
                     <Close className={classes.closeIcon} onClick={handleClose}/>
-                    <span className={classes.addMembers} onClick={()=>{setOpen(true)}}>Add Group Member/s</span> 
                 </DialogTitle>
 
                 <DialogContent className={classes.dialogContent}>

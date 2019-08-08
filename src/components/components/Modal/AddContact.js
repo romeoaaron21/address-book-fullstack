@@ -7,7 +7,6 @@ import decode from 'jwt-decode';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -135,7 +134,6 @@ export default function AddContact({ handleClose, openDialog, handleComponent, s
                                 margin="dense"
                                 fullWidth
                                 label="Email Address"
-                                type="text"
                                 variant="outlined"
                                 name="email"
                                 onChange={updateState}

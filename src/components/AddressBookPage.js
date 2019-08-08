@@ -13,31 +13,18 @@ import NavHeader from './components/AddressBook/NavHeader';
 import Toastify from './components/CommonComponents/Toastify'
 
 //material-ui components
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
 import InputBase from '@material-ui/core/InputBase';
-import Container from '@material-ui/core/Container';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
-import Divider from '@material-ui/core/Divider';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Icon from '@material-ui/core/Icon';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 //material-ui icons
@@ -48,7 +35,6 @@ import DeleteIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Visibility';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import PersonAdd from '@material-ui/icons/PersonAdd';
-import LogoutIcon from '@material-ui/icons/ExitToApp';
 import SearchIcon from '@material-ui/icons/Search';
 
 
@@ -94,11 +80,12 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
   },
   table: {
-    minWidth: 700,
+    minWidth: 1100,
   },
   tableTitle: {
     fontWeight:600, 
     fontSize:'0.8rem',
+    color: 'black',
   },
   title: {
     padding: '0 10px',
@@ -108,20 +95,20 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function createData(first_name, last_name, phone) {
-  return { first_name, last_name, phone };
-}
+// function createData(first_name, last_name, phone) {
+//   return { first_name, last_name, phone };
+// }
 
-const rows = [
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-  createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
-];
+// const rows = [
+//   createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
+//   createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
+//   createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
+//   createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
+//   createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
+//   createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
+//   createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
+//   createData('Romeo Aaron', 'Lumibao', '09109xxxxxx'),
+// ];
 
 export default function AddressBook() {
   
@@ -129,13 +116,14 @@ export default function AddressBook() {
     window.location.href = '/'
   }
 
+  const user_id = decode(localStorage.getItem('token')).userId;
   const user = localStorage.getItem('user');
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openMembers, setOpenMembers] = useState(false);
   const [contactId, setContactId] = useState('');
   const [searchVal, setSearchVal] = useState('');
-  const [user_id, setUser_id] = useState(decode(localStorage.getItem('token')).userId);
+  // const [user_id, setUser_id] = useState(decode(localStorage.getItem('token')).userId);
 
 
   const [component, setComponent] = useState(true);
@@ -189,19 +177,22 @@ export default function AddressBook() {
           <ContactGroup setToastify={setToastify} setToastifyType={setToastifyType}/>
           <Grid item xs={12}>
             <Paper className={classes.root}>
-              <Typography className={classes.title} >
+              <Paper className={classes.title} >
 
                 <IconButton className={classes.searchButton} aria-label="search">
                   <SearchIcon />
                 </IconButton>
-                <InputBase className={classes.searchInput} placeholder="Search Contact List" onChange={e => setSearchVal(e.target.value)} />
+                
+                <InputBase className={classes.searchInput} placeholder="Search Contact List" 
+                onChange={e => setSearchVal(e.target.value)} 
+                />
 
                 <span className={classes.addContactButon}>
                   <Fab size="medium" style={{ backgroundColor: '#833ab4' }} aria-label="add">
                     <AddIcon className={classes.addIcon} onClick={() => setOpen(true)} />
                   </Fab>
                 </span>
-              </Typography>
+              </Paper>
 
               <Table className={classes.table}>
                 <TableHead>
@@ -236,6 +227,7 @@ export default function AddressBook() {
                         setSortBut(false)
                       })
                     }} />}</TableCell>
+                    <TableCell align="right" className={classes.tableTitle}>EMAIL ADDRESS</TableCell>
                     <TableCell align="right" className={classes.tableTitle}>MOBILE NUMBER</TableCell>
                     <TableCell align="right" className={classes.tableTitle}>ACTION </TableCell>
                   </TableRow>
@@ -249,6 +241,7 @@ export default function AddressBook() {
                           {contacts[i].first_name}
                         </TableCell>
                         <TableCell align="right">{contacts[i].last_name}</TableCell>
+                        <TableCell align="right">{contacts[i].email}</TableCell>
                         <TableCell align="right">{contacts[i].mobile_phone}</TableCell>
                         <TableCell align="right">
 

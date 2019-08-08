@@ -8,74 +8,74 @@ export default function Toastify({setToastify, toastifyType}){
     return(
         <React.Fragment>
             {
-                toastifyType == 'addContact'?
+                toastifyType === 'addContact'?
                 toast.success(`Successfully added new contact!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :
-                toastifyType == 'addGroup'?
+                toastifyType === 'addGroup'?
                 toast.success(`Successfully added new contact group!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :
-                toastifyType == 'editContact'?
+                toastifyType === 'editContact'?
                 toast.success(`Successfully edited!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :
-                toastifyType == 'addMember'?
+                toastifyType === 'addMember'?
                 toast.success(`Successfully added new member!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :
-                toastifyType == 'deleteGroup'?
+                toastifyType === 'deleteGroup'?
                 toast.success(`Successfully deleted!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :
-                toastifyType == 'deleteMember'?
+                toastifyType === 'deleteMember'?
                 toast.success(`Successfully deleted contact member!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :
-                toastifyType == 'deleteContact'?
+                toastifyType === 'deleteContact'?
                 toast.success(`Successfully deleted contact!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :
 
                 
-                toastifyType == 'addContactError'?
+                toastifyType === 'addContactError'?
                 toast.error(`Failed to add new contact!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :
-                toastifyType == 'addGroupError'?
+                toastifyType === 'addGroupError'?
                 toast.error(`Failed to add new contact group!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :
-                toastifyType == 'editContactError'?
+                toastifyType === 'editContactError'?
                 toast.error(`Failed to edit contact information!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :
-                toastifyType == 'addMemberError'?
+                toastifyType === 'addMemberError'?
                 toast.error(`Failed to add new member!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :
-                toastifyType == 'deleteGroupError'?
+                toastifyType === 'deleteGroupError'?
                 toast.error(`Failed to delete group. Remove all members first!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :
-                toastifyType == 'deleteMemberError'?
+                toastifyType === 'deleteMemberError'?
                 toast.error(`Failed to deleted contact member!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })
                 :
-                toastifyType == 'deleteContactError'?
+                toastifyType === 'deleteContactError'?
                 toast.error(`Successfully deleted contact!`, {
                     position: toast.POSITION.TOP_RIGHT
                 })

@@ -19,7 +19,6 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 
 //material-ui icons
 import AddIcon from '@material-ui/icons/Add';
@@ -108,16 +107,19 @@ if (component) {
             <Grid item xs={12} style={{paddingBottom: '50px'}}>
                 <Paper className={classes.root} >
                     
-                    <Typography className={classes.title} >
+                    <Paper className={classes.title} >
                         <span className={classes.titleText}>CONTACT GROUPS</span>
+
                         <IconButton className={classes.searchButton} aria-label="search">
                             <SearchIcon />
                         </IconButton>
                         <InputBase className={classes.searchInput} onChange={e=>setSearchVal(e.target.value)} placeholder="Search Group Name"/>
+
+                        
                         <Fab size="small" className={classes.addIcon} aria-label="add" >
                             <AddIcon onClick={()=>setOpenGroup(true)}/>
                         </Fab>
-                    </Typography>
+                    </Paper>
                     <Divider />
 
                     <List component="nav">
@@ -136,8 +138,7 @@ if (component) {
                             </ListItemAvatar>
                             <ListItemText primary={groups[i].name} />
                             <ListItemSecondaryAction>
-                                <IconButton edge="end" aria-label="delete">
-                                    <DeleteIcon onClick={()=>{
+                                <IconButton edge="end" aria-label="delete" onClick={()=>{
                                         axios(`http://localhost:3001/api/deleteGroup/${groups[i].id}`, {
                                             method: 'delete',
                                           }).then(function (res) {
@@ -149,7 +150,8 @@ if (component) {
                                             setToastifyType('deleteGroupError');
                                             setToastify(true);
                                           })
-                                    }}/>
+                                    }}>
+                                    <DeleteIcon />
                                 </IconButton>
                             </ListItemSecondaryAction>
                         </ListItem>
