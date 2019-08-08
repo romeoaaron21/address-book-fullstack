@@ -174,6 +174,7 @@ if (component) {
                     
                        
                             {editName && editId === groups[i].id?
+                            <form onSubmit={(e)=>{changeGroupName(e)}}>
                             <Grid container className={classes.groupNameEdit}>
                                 <ListItemAvatar>
                                     <Avatar className={classes.icon}>
@@ -201,12 +202,14 @@ if (component) {
                                     }}>
                                         Cancel
                                     </Button>
-                                    <Button className={classes.submit} onClick={(e)=>{changeGroupName(e)}}>
+                                    <Button className={classes.submit} type="submit">
                                         Edit Group Name
                                     </Button>
                                 </DialogActions>
-
                             </Grid>
+                            <Divider />
+                            </form>
+                            
 
                             :
                             <React.Fragment>

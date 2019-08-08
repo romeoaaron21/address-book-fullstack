@@ -40,9 +40,9 @@ function deleteContact(req, res){
 
   db.query(`DELETE FROM addressbook WHERE contact_id=${contacts_id}`)
   .then(() => {
-    db.query(`DELETE FROM contacts WHERE id=${contacts_id}`)
-  }).then(() => {
     db.query(`DELETE FROM group_members WHERE contact_id=${contacts_id}`)
+  }).then(() => {
+    db.query(`DELETE FROM contacts WHERE id=${contacts_id}`)
   }).then(response => {
     res.status(200).json(response);
   }).catch(err => {
