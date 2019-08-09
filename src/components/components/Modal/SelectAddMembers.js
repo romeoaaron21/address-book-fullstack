@@ -123,7 +123,7 @@ export default function SelectAddMembers({ handleClose, openDialog, handleCompon
                 </div>
 
                 {filteredSearch.map(contact => (
-                    <React.Fragment>
+                    <React.Fragment key={contact.id}>
                         <ListItem className={classes.dialogContent} key={contact.id} role={undefined} button onClick={handleToggle(contact.id)}>
                             <ListItemIcon>
                                 <Checkbox
