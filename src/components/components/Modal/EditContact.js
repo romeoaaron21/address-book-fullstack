@@ -274,10 +274,6 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
                 </Grid>
                 </Grid>
                 
-                
-                
-
-
                 <DialogActions>
                     <Button onClick={handleClose} className={classes.cancel}>
                         Cancel

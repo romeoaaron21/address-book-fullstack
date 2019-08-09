@@ -27,16 +27,6 @@ import DeleteIcon from '@material-ui/icons/DeleteForever';
 import GroupAdd from '@material-ui/icons/GroupAdd';
 import SearchIcon from '@material-ui/icons/Search';
 
-
-
-
-
-
-
-
-
-
-
 const useStyles = makeStyles(theme => ({
     action: {
         color: 'white',

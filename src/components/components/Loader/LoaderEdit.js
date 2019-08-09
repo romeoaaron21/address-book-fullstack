@@ -10,6 +10,7 @@ const useStyles = makeStyles(theme => ({
     loading:{
       display:'flex', 
       justifyContent:'center',
+      marginBottom:'7vh'
     },
   }));
 
