@@ -138,8 +138,8 @@ export default function AddressBook() {
   const [toastify, setToastify] = useState(false);
   const [toastifyType, setToastifyType] = useState('');
 
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [page, setPage] = useState(0);
+  // const [rowsPerPage, setRowsPerPage] = useState(5);
+  // const [page, setPage] = useState(0);
   const [componentGroup, setComponentGroup] = useState(true)
 
 
@@ -189,14 +189,14 @@ export default function AddressBook() {
   })
 
 
-  function handleChangePage(event, newPage) {
-    setPage(newPage);
-  }
+  // function handleChangePage(event, newPage) {
+  //   setPage(newPage);
+  // }
 
-  function handleChangeRowsPerPage(event) {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  }
+  // function handleChangeRowsPerPage(event) {
+  //   setRowsPerPage(+event.target.value);
+  //   setPage(0);
+  // }
 
 
 
@@ -349,7 +349,7 @@ export default function AddressBook() {
                   }
                 </TableBody>
               </Table>
-              <TablePagination
+              {/* <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
                 count={filteredSearch.length}
@@ -363,7 +363,7 @@ export default function AddressBook() {
                 }}
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
-              />
+              /> */}
             </Paper>
           </Grid>
         </Grid>
