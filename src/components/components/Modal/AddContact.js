@@ -79,6 +79,9 @@ export default function AddContact({ handleClose, openDialog, handleComponent, s
         axios('http://localhost:3001/api/addContact', {
             method: 'post',
             data: state,
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
         }).then(function (res) {
             console.log(res);
             handleComponent();

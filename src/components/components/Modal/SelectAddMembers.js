@@ -70,6 +70,9 @@ export default function SelectAddMembers({ handleClose, openDialog, handleCompon
     if (component) {
         axios(`http://localhost:3001/api/getAvailableContact/${groupId}`, {
           method: 'get',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
         }).then(function (res) {
             console.log(res);
             setContacts(res.data)
@@ -119,6 +122,9 @@ export default function SelectAddMembers({ handleClose, openDialog, handleCompon
                         axios(`http://localhost:3001/api/addAvailableContact/${groupId}`, {
                             method: 'post',
                             data: contactName,
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                              }
                         }).then(function(res) {
                             handleComponent();
                             handleClose();

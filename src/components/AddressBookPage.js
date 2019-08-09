@@ -154,6 +154,7 @@ export default function AddressBook() {
     }).then(function (res) {
       setContacts(res.data)
       setComponent(false);
+      setComponentGroup(true)
     }).catch(()=>{
       axios(`http://localhost:3001/api/getContact/${user_id}`, {
       method: 'get',
@@ -179,9 +180,6 @@ export default function AddressBook() {
   }
   function handleComponent() {
     setComponent(true)
-  }
-  function handleComponentGroup() {
-    setComponentGroup(true)
   }
 
   let filteredSearch = Object.keys(contacts).filter(function (obj) {
@@ -211,7 +209,13 @@ export default function AddressBook() {
       {!component && filteredSearch?
         
         <Grid container style={{ padding: '50px' }}>
+
+
+
           <ContactGroup setToastify={setToastify} setToastifyType={setToastifyType} setConfirmDelete={setConfirmDelete} saveGroupId={saveGroupId} component={componentGroup} setComponentGroup={setComponentGroup}/>
+
+
+
           <Grid item xs={12}>
             <Paper className={classes.root}>
               <Paper className={classes.title} >
@@ -239,6 +243,9 @@ export default function AddressBook() {
                     <TableCell className={classes.tableTitle}>FIRST NAME {!sortButF ? <ArrowDown className={classes.arrow} onClick={() => {
                       axios(`http://localhost:3001/api/sortContactFname/${user_id}`, {
                         method: 'get',
+                        headers: {
+                          'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
                       }).then(function (res) {
                         setContacts(res.data)
                         setSortButF(true)
@@ -246,6 +253,9 @@ export default function AddressBook() {
                     }} /> : <ArrowUpward className={classes.arrow} onClick={() => {
                       axios(`http://localhost:3001/api/sortContactFnameDesc/${user_id}`, {
                         method: 'get',
+                        headers: {
+                          'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
                       }).then(function (res) {
                         setContacts(res.data)
                         setSortButF(false)
@@ -254,6 +264,9 @@ export default function AddressBook() {
                     <TableCell align="right" className={classes.tableTitle}>LAST NAME {!sortBut ? <ArrowDown className={classes.arrow} onClick={() => {
                       axios(`http://localhost:3001/api/sortContactLname/${user_id}`, {
                         method: 'get',
+                        headers: {
+                          'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
                       }).then(function (res) {
                         setContacts(res.data)
                         setSortBut(true)
@@ -261,6 +274,9 @@ export default function AddressBook() {
                     }} /> : <ArrowUpward className={classes.arrow} onClick={() => {
                       axios(`http://localhost:3001/api/sortContactLnameDesc/${user_id}`, {
                         method: 'get',
+                        headers: {
+                          'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
                       }).then(function (res) {
                         setContacts(res.data)
                         setSortBut(false)
@@ -361,7 +377,8 @@ export default function AddressBook() {
       {open ? <AddContact openDialog={open} handleClose={handleClose} handleComponent={handleComponent} setToastify={setToastify} setToastifyType={setToastifyType} /> : <React.Fragment></React.Fragment>}
       {openEdit ? <EditContact openDialog={openEdit} editId={contactId} handleClose={handleCloseEdit} handleComponent={handleComponent} setToastify={setToastify} setToastifyType={setToastifyType} /> : <React.Fragment></React.Fragment>}
       {openMembers ? <AddMembers openDialog={openMembers} handleClose={handleCloseMembers} handleComponent={handleComponent} contactId={contactId} setToastify={setToastify} setToastifyType={setToastifyType}/> : <React.Fragment></React.Fragment>}
-      {confirmDelete? <ConfirmDelete saveGroupId={saveGroupId} setContactId={setContactId} handleComponentGroup={handleComponentGroup} openDialog={confirmDelete} handleClose={handleDelete} handleComponent={handleComponent} groupId={groupId} contactId={contactId} setToastify={setToastify} setToastifyType={setToastifyType}/>:<React.Fragment></React.Fragment>}
+      
+      {confirmDelete? <ConfirmDelete saveGroupId={saveGroupId} setContactId={setContactId} openDialog={confirmDelete} handleClose={handleDelete} handleComponent={handleComponent} groupId={groupId} contactId={contactId} setToastify={setToastify} setToastifyType={setToastifyType}/>:<React.Fragment></React.Fragment>}
     
     </React.Fragment>
   );

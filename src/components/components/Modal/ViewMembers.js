@@ -113,6 +113,9 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
     if (component) {
         axios(`http://localhost:3001/api/getMembers/${groupId}`, {
           method: 'get',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
         }).then(function (res) {
           setState(res.data.length);
           setContacts(res.data);
@@ -177,6 +180,9 @@ export default function AddContact({ handleClose, openDialog, groupId, setToasti
                           <DeleteIcon onClick={()=> {
                               axios(`http://localhost:3001/api/deleteMember/${contact.contact_id}/${contact.group_id}`, {
                                 method: 'delete',
+                                headers: {
+                                  'Authorization': `Bearer ${localStorage.getItem('token')}`
+                                }
                               }).then(function (res) {
                                 setComponent(true)
                                 setToastifyType('deleteMember');

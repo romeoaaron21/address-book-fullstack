@@ -107,10 +107,14 @@ export default function ContactGroup({setToastify, setToastifyType, setConfirmDe
 if (component) {
     axios(`http://localhost:3001/api/getGroup/${user_id}`, {
       method: 'get',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     }).then(function (res) {
       setGroups(res.data)
+      setComponentGroup(false);
     })
-    setComponentGroup(false);
+    
 }
 
   function handleCloseMembers() {
@@ -128,6 +132,9 @@ if (component) {
 
       axios(`http://localhost:3001/api/editGroupName/${editId}/${groupName}`, {
         method: 'patch',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
         }).then(function(res){
             setComponentGroup(true)
             setEditName(false)

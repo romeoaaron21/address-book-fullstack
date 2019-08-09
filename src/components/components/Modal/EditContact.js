@@ -78,6 +78,9 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
       if(showId){
         axios(`http://localhost:3001/api/getContactInfo/${editId}`, {
             method: 'get',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+              }
         }).then(function(res) {
             console.log(res)
             setState({
@@ -102,6 +105,9 @@ export default function EditContact({handleClose, openDialog, editId, handleComp
             axios(`http://localhost:3001/api/editContact/${editId}`, {
                         method: 'patch',
                         data: state,
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                          }
                     }).then(function(res){
                         console.log(res);
                         handleComponent();

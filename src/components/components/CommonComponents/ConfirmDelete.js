@@ -47,32 +47,44 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function ConfirmDelete({ handleClose, openDialog, handleComponent, contactId, setToastify, setToastifyType, groupId, handleComponentGroup, setContactId, saveGroupId }) {
+export default function ConfirmDelete({ handleClose, openDialog, handleComponent, contactId, setToastify, setToastifyType, groupId, setContactId, saveGroupId }) {
 
     function Delete(){
         if(contactId){
         axios(`http://localhost:3001/api/deleteContact/${contactId}`, {
               method: 'delete',
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+              }
             }).then(function (res) {
+                saveGroupId('');
                 setContactId('');
                 handleComponent();
                 handleClose();
-              setToastifyType('deleteContact');
-              setToastify(true);
+                setToastifyType('deleteContact');
+                setToastify(true);
             }).catch(() => {
-              setToastifyType('deleteContactError');
-              setToastify(true);
+                saveGroupId('');
+                setContactId('');
+                setToastifyType('deleteContactError');
+                setToastify(true);
             })
         }else if(groupId){
                axios(`http://localhost:3001/api/deleteGroup/${groupId}`, {
                     method: 'delete',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                      }
                 }).then(function (res) {
                     saveGroupId('');
-                    handleComponentGroup();
+                    setContactId('');
+                    handleComponent();
                     handleClose();
                     setToastifyType('deleteGroup');
                     setToastify(true);
                 }).catch(()=>{
+                    saveGroupId('');
+                    setContactId('');
                     setToastifyType('deleteGroupError');
                     setToastify(true);
                 })

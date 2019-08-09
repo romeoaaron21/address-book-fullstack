@@ -57,8 +57,10 @@ export default function AddContact({ handleClose, openDialog, handleComponent, s
         e.preventDefault();
             axios(`http://localhost:3001/api/addGroup/${id}/${state}`, {
                 method: 'post',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
             }).then(function(res) {
-                console.log(res)
                 handleComponent();
                 handleClose();
                 setToastifyType('addGroup');

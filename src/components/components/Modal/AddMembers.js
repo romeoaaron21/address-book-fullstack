@@ -75,6 +75,9 @@ export default function AddMembers({ handleClose, openDialog, handleComponent, c
     if (component) {
         axios(`http://localhost:3001/api/selectGroup/${user_id}/${contactId}`, {
           method: 'get',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
         }).then(function (res) {
             console.log(res)
           setGroups(res.data)
@@ -124,6 +127,9 @@ export default function AddMembers({ handleClose, openDialog, handleComponent, c
                         axios(`http://localhost:3001/api/addGroupMembers/${contactId}`, {
                             method: 'post',
                             data: groupName,
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                              }
                         }).then(function(res) {
                             handleComponent();
                             handleClose();
