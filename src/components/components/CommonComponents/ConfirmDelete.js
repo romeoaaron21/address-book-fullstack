@@ -47,13 +47,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function ConfirmDelete({ handleClose, openDialog, handleComponent, contactId, setToastify, setToastifyType, groupId, handleComponentGroup }) {
+export default function ConfirmDelete({ handleClose, openDialog, handleComponent, contactId, setToastify, setToastifyType, groupId, handleComponentGroup, setContactId, saveGroupId }) {
 
     function Delete(){
         if(contactId){
         axios(`http://localhost:3001/api/deleteContact/${contactId}`, {
               method: 'delete',
             }).then(function (res) {
+                setContactId('');
                 handleComponent();
                 handleClose();
               setToastifyType('deleteContact');
@@ -66,6 +67,7 @@ export default function ConfirmDelete({ handleClose, openDialog, handleComponent
                axios(`http://localhost:3001/api/deleteGroup/${groupId}`, {
                     method: 'delete',
                 }).then(function (res) {
+                    saveGroupId('');
                     handleComponentGroup();
                     handleClose();
                     setToastifyType('deleteGroup');

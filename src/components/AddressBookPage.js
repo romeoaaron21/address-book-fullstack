@@ -361,8 +361,7 @@ export default function AddressBook() {
       {open ? <AddContact openDialog={open} handleClose={handleClose} handleComponent={handleComponent} setToastify={setToastify} setToastifyType={setToastifyType} /> : <React.Fragment></React.Fragment>}
       {openEdit ? <EditContact openDialog={openEdit} editId={contactId} handleClose={handleCloseEdit} handleComponent={handleComponent} setToastify={setToastify} setToastifyType={setToastifyType} /> : <React.Fragment></React.Fragment>}
       {openMembers ? <AddMembers openDialog={openMembers} handleClose={handleCloseMembers} handleComponent={handleComponent} contactId={contactId} setToastify={setToastify} setToastifyType={setToastifyType}/> : <React.Fragment></React.Fragment>}
-      
-      {confirmDelete? <ConfirmDelete handleComponentGroup={handleComponentGroup} openDialog={confirmDelete} handleClose={handleDelete} handleComponent={handleComponent} groupId={groupId} contactId={contactId} setToastify={setToastify} setToastifyType={setToastifyType}/>:<React.Fragment></React.Fragment>}
+      {confirmDelete? <ConfirmDelete saveGroupId={saveGroupId} setContactId={setContactId} handleComponentGroup={handleComponentGroup} openDialog={confirmDelete} handleClose={handleDelete} handleComponent={handleComponent} groupId={groupId} contactId={contactId} setToastify={setToastify} setToastifyType={setToastifyType}/>:<React.Fragment></React.Fragment>}
     
     </React.Fragment>
   );
