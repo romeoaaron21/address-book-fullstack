@@ -153,6 +153,7 @@ export default function AddressBook() {
       }
     }).then(function (res) {
       setContacts(res.data)
+      setComponent(false);
     }).catch(()=>{
       axios(`http://localhost:3001/api/getContact/${user_id}`, {
       method: 'get',
@@ -161,7 +162,6 @@ export default function AddressBook() {
       }
     })
     })
-    setComponent(false);
   }
 
   function handleDelete() {

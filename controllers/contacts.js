@@ -1,3 +1,6 @@
+const jwt = require('jsonwebtoken');
+const secret = require('../secret');
+
 
 function addContact(req, res) {
   const db = req.app.get('db');
@@ -24,14 +27,21 @@ function addContact(req, res) {
 function getContact(req, res){
   const db = req.app.get('db');
   const { user_id } = req.params;
+  if(!req.headers.authorization) {
+    return res.status(401).end();
+}
+  try{
+    const token = req.headers.authorization.split(' ')[1];
+    jwt.verify(token, secret);
 
   db.query(`SELECT * FROM contacts, addressbook WHERE addressbook.contact_id = contacts.id AND addressbook.user_id = ${user_id} ORDER BY contacts.first_name ASC`)
   .then(contacts => {
       res.status(201).json({ ...contacts});
   })
-  .catch(err => {
+  }
+  catch(err) {
     res.status(500).end()
-  });
+  };
 }
 
 function deleteContact(req, res){
