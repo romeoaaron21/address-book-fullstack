@@ -92,11 +92,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function ContactGroup({setToastify, setToastifyType}) {
+export default function ContactGroup({setToastify, setToastifyType, setConfirmDelete, saveGroupId, component, setComponentGroup}) {
     const user_id = decode(localStorage.getItem('token')).userId;
     const [openGroup, setOpenGroup] = useState(false);
     const [openMembers, setOpenMembers] = useState(false);
-    const [component, setComponent] = useState(true);
     const [groups, setGroups] = useState([]);
     const [groupId, setGroupId] = useState('');
     const [searchVal, setSearchVal] = useState('');
@@ -111,7 +110,7 @@ if (component) {
     }).then(function (res) {
       setGroups(res.data)
     })
-    setComponent(false);
+    setComponentGroup(false);
 }
 
   function handleCloseMembers() {
@@ -121,7 +120,7 @@ if (component) {
     setOpenGroup(false);
   }
   function handleComponent() {
-    setComponent(true)
+    setComponentGroup(true)
   }
 
   function changeGroupName(e){
@@ -130,7 +129,7 @@ if (component) {
       axios(`http://localhost:3001/api/editGroupName/${editId}/${groupName}`, {
         method: 'patch',
         }).then(function(res){
-            setComponent(true)
+            setComponentGroup(true)
             setEditName(false)
             setToastifyType('editGroupName');
             setToastify(true);
@@ -237,16 +236,18 @@ if (component) {
                                     </IconButton>
 
                                     <IconButton edge="end" aria-label="delete" onClick={()=>{
-                                            axios(`http://localhost:3001/api/deleteGroup/${groups[i].id}`, {
-                                                method: 'delete',
-                                            }).then(function (res) {
-                                                setComponent(true)
-                                                setToastifyType('deleteGroup');
-                                                setToastify(true);
-                                            }).catch(()=>{
-                                                setToastifyType('deleteGroupError');
-                                                setToastify(true);
-                                            })
+                                        setConfirmDelete(true);
+                                        saveGroupId(groups[i].id)
+                                            // axios(`http://localhost:3001/api/deleteGroup/${groups[i].id}`, {
+                                            //     method: 'delete',
+                                            // }).then(function (res) {
+                                            //     setComponent(true)
+                                            //     setToastifyType('deleteGroup');
+                                            //     setToastify(true);
+                                            // }).catch(()=>{
+                                            //     setToastifyType('deleteGroupError');
+                                            //     setToastify(true);
+                                            // })
                                         }}>
                                         <Tooltip title="Delete Group" placement="top">
                                             <DeleteIcon />

@@ -13,6 +13,11 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
+if (localStorage.getItem('token')) {
+  window.location.href = '#/addressBook'
+}
+
 const useStyles = makeStyles(theme => ({
   '@global': {
     body: {
@@ -56,11 +61,8 @@ export default function SignIn() {
     password : ''
   })
   // let token = localStorage.getItem('token');
-
-  const [ token, setToken ] = useState('');
-  const [ user, setUser ] = useState('');
-  localStorage.setItem('token', token);
-  localStorage.setItem('user', user);
+  
+  
 
   const updateWarning = e => {
     if(e.target.value.length === 0) {
@@ -118,9 +120,13 @@ export default function SignIn() {
         //   'Authorization': `Bearer ${token}`
         // }
       }).then(function(res) {
-        setToken(res.data.token)
-        setUser(res.data.username)
+        let token = res.data.token
+        let user = res.data.username
+
         window.location.href = '#/addressBook'
+        localStorage.setItem('user', user);
+        localStorage.setItem('token', token);
+        
       }).catch(() => {
         toast.error("Invalid User Account!", {
           position: toast.POSITION.TOP_RIGHT

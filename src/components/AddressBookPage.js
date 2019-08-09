@@ -14,6 +14,7 @@ import EditContact from './components/Modal/EditContact';
 import Loader from './components/Loader/Loader';
 import NavHeader from './components/AddressBook/NavHeader';
 import Toastify from './components/CommonComponents/Toastify'
+import ConfirmDelete from './components/CommonComponents/ConfirmDelete';
 
 //material-ui components
 import Fab from '@material-ui/core/Fab';
@@ -115,7 +116,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function AddressBook() {
   
-   if (localStorage.getItem('token') === null || localStorage.getItem('token').length === 0) {
+   if (localStorage.getItem('token') === null || localStorage.getItem('token') === '') {
     window.location.href = '/'
   }
 
@@ -126,7 +127,7 @@ export default function AddressBook() {
   const [openMembers, setOpenMembers] = useState(false);
   const [contactId, setContactId] = useState('');
   const [searchVal, setSearchVal] = useState('');
-  // const [user_id, setUser_id] = useState(decode(localStorage.getItem('token')).userId);
+  const [groupId, saveGroupId] = useState('');
 
 
   const [component, setComponent] = useState(true);
@@ -139,6 +140,10 @@ export default function AddressBook() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(0);
+  const [componentGroup, setComponentGroup] = useState(true)
+
+
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   if (component) {
     axios(`http://localhost:3001/api/getContact/${user_id}`, {
@@ -159,6 +164,10 @@ export default function AddressBook() {
     setComponent(false);
   }
 
+  function handleDelete() {
+    setConfirmDelete(false);
+  }
+
   function handleCloseMembers() {
     setOpenMembers(false);
   }
@@ -170,6 +179,9 @@ export default function AddressBook() {
   }
   function handleComponent() {
     setComponent(true)
+  }
+  function handleComponentGroup() {
+    setComponentGroup(true)
   }
 
   let filteredSearch = Object.keys(contacts).filter(function (obj) {
@@ -199,7 +211,7 @@ export default function AddressBook() {
       {!component && filteredSearch?
         
         <Grid container style={{ padding: '50px' }}>
-          <ContactGroup setToastify={setToastify} setToastifyType={setToastifyType}/>
+          <ContactGroup setToastify={setToastify} setToastifyType={setToastifyType} setConfirmDelete={setConfirmDelete} saveGroupId={saveGroupId} component={componentGroup} setComponentGroup={setComponentGroup}/>
           <Grid item xs={12}>
             <Paper className={classes.root}>
               <Paper className={classes.title} >
@@ -282,16 +294,18 @@ export default function AddressBook() {
                           </Fab>
 
                           <Fab size="small" onClick={() => {
-                            axios(`http://localhost:3001/api/deleteContact/${contacts[i].contact_id}`, {
-                              method: 'delete',
-                            }).then(function (res) {
-                              setComponent(true);
-                              setToastifyType('deleteContact');
-                              setToastify(true);
-                            }).catch(() => {
-                              setToastifyType('deleteContactError');
-                              setToastify(true);
-                            })
+                            setConfirmDelete(true)
+                            setContactId(contacts[i].contact_id)
+                            // axios(`http://localhost:3001/api/deleteContact/${contacts[i].contact_id}`, {
+                            //   method: 'delete',
+                            // }).then(function (res) {
+                            //   setComponent(true);
+                            //   setToastifyType('deleteContact');
+                            //   setToastify(true);
+                            // }).catch(() => {
+                            //   setToastifyType('deleteContactError');
+                            //   setToastify(true);
+                            // })
                           }} style={{ backgroundColor: '#f50057', margin: '0 10px' }} className={classes.action}>
                             <Tooltip title="Delete Contact List" placement="top">
                             <DeleteIcon />
@@ -347,6 +361,9 @@ export default function AddressBook() {
       {open ? <AddContact openDialog={open} handleClose={handleClose} handleComponent={handleComponent} setToastify={setToastify} setToastifyType={setToastifyType} /> : <React.Fragment></React.Fragment>}
       {openEdit ? <EditContact openDialog={openEdit} editId={contactId} handleClose={handleCloseEdit} handleComponent={handleComponent} setToastify={setToastify} setToastifyType={setToastifyType} /> : <React.Fragment></React.Fragment>}
       {openMembers ? <AddMembers openDialog={openMembers} handleClose={handleCloseMembers} handleComponent={handleComponent} contactId={contactId} setToastify={setToastify} setToastifyType={setToastifyType}/> : <React.Fragment></React.Fragment>}
+      
+      {confirmDelete? <ConfirmDelete handleComponentGroup={handleComponentGroup} openDialog={confirmDelete} handleClose={handleDelete} handleComponent={handleComponent} groupId={groupId} contactId={contactId} setToastify={setToastify} setToastifyType={setToastifyType}/>:<React.Fragment></React.Fragment>}
+    
     </React.Fragment>
   );
 }
